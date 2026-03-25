@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 15:38:41 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/25 16:00:42 by mbotelho         ###   ########.fr       */
+/*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
+/*   Updated: 2026/03/25 16:01:23 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	main(int ac, char **av)
+int	parsing(int ac, char **av)
 {
-	parsing(ac, av);
+	printf("Hello\n");
+	printf("ac: %i\nav: %s\n", ac, *av);
+	return (0);
 }
