@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:41 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/25 16:00:42 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/25 20:00:37 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,4 +15,5 @@
 int	main(int ac, char **av)
 {
 	parsing(ac, av);
+	return 0;
 }

@@ -6,7 +6,7 @@
 #    By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 15:50:00 by mbotelho          #+#    #+#              #
-#    Updated: 2026/03/25 16:05:00 by mbotelho         ###   ########.fr        #
+#    Updated: 2026/03/25 19:37:42 by mbotelho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,8 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 
+all_clean: all clean
+
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re all_clean
