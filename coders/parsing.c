@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/26 19:36:05 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/26 19:43:58 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	parsing(int ac, char **av)
 		printf("Error: Scheduler must be fifo or edf\n");
 		return (0);
 	}
-	allocate_struct(ac, av)
+	allocate_struct(ac, av);
 	return (1);
 }
 
@@ -74,7 +74,7 @@ int	check_input_int(char *arg)
 	return (1);
 }
 
-t_args allocate_struct(int ac, char **av)
+t_args	allocate_struct(int ac, char **av)
 {
-	t_args coders;
+	t_args	coders;
 }
