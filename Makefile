@@ -6,7 +6,7 @@
 #    By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 15:50:00 by mbotelho          #+#    #+#              #
-#    Updated: 2026/03/25 19:37:42 by mbotelho         ###   ########.fr        #
+#    Updated: 2026/03/26 19:26:25 by mbotelho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,19 +21,18 @@ SRCS = $(FOLDER)/codexion.c \
 
 OBJS = $(SRCS:.c=.o)
 
+all_clean: all clean
+
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-
 
 clean:
 	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
-
-all_clean: all clean
 
 re: fclean all
 

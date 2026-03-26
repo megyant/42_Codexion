@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/25 20:10:13 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/26 19:36:05 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,36 +16,65 @@ int	parsing(int ac, char **av)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	if (ac != 9)
+		return (input_error(ac));
+	while (i < (ac - 1))
 	{
-		input_error();
-		return 0;
-	}
-	else
-	{
-		while (*av && i < (ac - 1))
+		if (!check_input_int(av[i]))
 		{
-			if (av[i]++)
-			{
-				// check errors
-				// add to struct
-				return 1;
-			}
-			return 1;
+			printf("Error: Negative number as argument\n");
+			return (0);
 		}
-		return 1;
+		i++;
 	}
+	if (strcmp(av[i], "fifo") && strcmp(av[i], "edf"))
+	{
+		printf("Error: Scheduler must be fifo or edf\n");
+		return (0);
+	}
+	allocate_struct(ac, av)
+	return (1);
 }
 
-void input_error(void)
+int	input_error(int ac)
 {
-	fprintf(stderr, "Error: invalid input\n");
-	fprintf(stderr, "\nInput format: number_of_coders time_to_burnout time_to_compile time_to_debug "
-			"time_to_refactor number_of_compiles_required dongle_cooldown scheduler(fifo/edf)\n");
+	if (ac > 9)
+		fprintf(stderr, "Error: invalid input. Too many arguments\n");
+	else if (ac < 9)
+		fprintf(stderr, "Error: invalid input. Too few arguments\n");
+	else
+		fprintf(stderr, "Error: invalid input.\n");
+	fprintf(stderr,
+		"\nInput format: number_of_coders time_to_burnout "
+		"time_to_compile time_to_debug "
+		"time_to_refactor number_of_compiles_required "
+		"dongle_cooldown scheduler(fifo/edf)\n");
+	return (0);
 }
 
-int negative_numbers()
+static int	is_digit(char c)
 {
-	return 0;
+	return (c >= '0' && c <= '9');
+}
+
+int	check_input_int(char *arg)
+{
+	char	*str;
+
+	str = arg;
+	if (*arg == '-')
+		return (0);
+	while (*arg != '\0')
+	{
+		if (!is_digit(*arg))
+			return (0);
+		arg++;
+	}
+	return (1);
+}
+
+t_args allocate_struct(int ac, char **av)
+{
+	t_args coders;
 }
