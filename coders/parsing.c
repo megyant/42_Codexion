@@ -6,13 +6,13 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/26 19:43:58 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/27 09:13:23 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	parsing(int ac, char **av)
+t_args	*parsing(int ac, char **av)
 {
 	int	i;
 
@@ -21,23 +21,22 @@ int	parsing(int ac, char **av)
 		return (input_error(ac));
 	while (i < (ac - 1))
 	{
-		if (!check_input_int(av[i]))
+		if (!check_input_long(av[i]))
 		{
 			printf("Error: Negative number as argument\n");
-			return (0);
+			return (NULL);
 		}
 		i++;
 	}
 	if (strcmp(av[i], "fifo") && strcmp(av[i], "edf"))
 	{
 		printf("Error: Scheduler must be fifo or edf\n");
-		return (0);
+		return (NULL);
 	}
-	allocate_struct(ac, av);
-	return (1);
+	return (allocate_struct(ac, av));
 }
 
-int	input_error(int ac)
+t_args	*input_error(int ac)
 {
 	if (ac > 9)
 		fprintf(stderr, "Error: invalid input. Too many arguments\n");
@@ -50,15 +49,10 @@ int	input_error(int ac)
 		"time_to_compile time_to_debug "
 		"time_to_refactor number_of_compiles_required "
 		"dongle_cooldown scheduler(fifo/edf)\n");
-	return (0);
+	return (NULL);
 }
 
-static int	is_digit(char c)
-{
-	return (c >= '0' && c <= '9');
-}
-
-int	check_input_int(char *arg)
+int	check_input_long(char *arg)
 {
 	char	*str;
 
@@ -74,7 +68,20 @@ int	check_input_int(char *arg)
 	return (1);
 }
 
-t_args	allocate_struct(int ac, char **av)
+t_args	*allocate_struct(int ac, char **av)
 {
-	t_args	coders;
+	t_args	*coders;
+
+	coders = malloc(sizeof(t_args));
+	if (!coders)
+		return (NULL);
+	coders->number_coders = ft_atol(av[1]);
+	coders->time_burnout = ft_atol(av[2]);
+	coders->time_compile = ft_atol(av[3]);
+	coders->time_debug = ft_atol(av[4]);
+	coders->time_refactor = ft_atol(av[5]);
+	coders->total_compiles = ft_atol(av[6]);
+	coders->dongle_cooldown = ft_atol(av[7]);
+	coders->scheduler = ft_strdup(av[8]);
+	return (coders);
 }

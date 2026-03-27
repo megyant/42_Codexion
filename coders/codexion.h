@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/26 19:33:59 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/27 09:12:45 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,20 @@ typedef struct s_args
 	long	time_refactor;
 	int		total_compiles;
 	long	dongle_cooldown;
-	char	**scheduler;
+	char	*scheduler;
 }			t_args;
 
 // Reading the input
-int			parsing(int ac, char **av);
-int			check_input_int(char *arg);
+t_args		*parsing(int ac, char **av);
+int			check_input_long(char *arg);
+t_args		*allocate_struct(int ac, char **av);
 
 // Error handling
-int			input_error(int ac);
+t_args		*input_error(int ac);
 
 // Helper functions
-static int	is_digit(char c);
+int			is_digit(char c);
+long		ft_atol(const char *nptr);
+char		*ft_strdup(const char *s);
 
 #endif
