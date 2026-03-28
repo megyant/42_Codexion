@@ -1,2 +1,2 @@
 # 42_Codexion
-Solving the philosopher's problem
+Solving the dining philosopher's problem
