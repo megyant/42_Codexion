@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/27 09:12:45 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/28 18:49:07 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,17 @@ typedef struct s_args
 
 // Reading the input
 t_args		*parsing(int ac, char **av);
-int			check_input_long(char *arg);
+int			check_input(char *arg);
 t_args		*allocate_struct(int ac, char **av);
 
 // Error handling
 t_args		*input_error(int ac);
+void		ft_free(t_args *coders);
 
 // Helper functions
 int			is_digit(char c);
 long		ft_atol(const char *nptr);
+int			ft_atoi(const char *nptr);
 char		*ft_strdup(const char *s);
 
 #endif

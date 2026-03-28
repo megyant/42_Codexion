@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/27 09:13:23 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/28 18:49:45 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ t_args	*parsing(int ac, char **av)
 		return (input_error(ac));
 	while (i < (ac - 1))
 	{
-		if (!check_input_long(av[i]))
+		if (!check_input(av[i]))
 		{
-			printf("Error: Negative number as argument\n");
+			printf("Error: Invalid input\n");
 			return (NULL);
 		}
 		i++;
@@ -52,12 +52,12 @@ t_args	*input_error(int ac)
 	return (NULL);
 }
 
-int	check_input_long(char *arg)
+int	check_input(char *arg)
 {
 	char	*str;
 
 	str = arg;
-	if (*arg == '-')
+	if (*arg == '\0' || *arg == '-')
 		return (0);
 	while (*arg != '\0')
 	{
@@ -75,13 +75,23 @@ t_args	*allocate_struct(int ac, char **av)
 	coders = malloc(sizeof(t_args));
 	if (!coders)
 		return (NULL);
-	coders->number_coders = ft_atol(av[1]);
+	coders->number_coders = ft_atoi(av[1]);
 	coders->time_burnout = ft_atol(av[2]);
 	coders->time_compile = ft_atol(av[3]);
 	coders->time_debug = ft_atol(av[4]);
 	coders->time_refactor = ft_atol(av[5]);
-	coders->total_compiles = ft_atol(av[6]);
+	coders->total_compiles = ft_atoi(av[6]);
 	coders->dongle_cooldown = ft_atol(av[7]);
 	coders->scheduler = ft_strdup(av[8]);
+	if (coders->number_coders < 0 || coders->time_burnout < 0
+		|| coders->time_compile < 0 || coders->time_debug < 0
+		|| coders->time_refactor < 0 || coders->total_compiles < 0
+		|| coders->dongle_cooldown < 0 || coders->scheduler == NULL)
+	{
+		printf("Error: Invalid or missing input or "
+			"overflowing numeric input.\n");
+		ft_free(coders);
+		return (NULL);
+	}
 	return (coders);
 }

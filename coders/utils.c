@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 08:56:52 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/27 09:07:26 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/28 18:49:21 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,45 @@ int	is_digit(char c)
 long	ft_atol(const char *nptr)
 {
 	int		i;
+	long	number;
+	long	max;
+
+	i = 0;
+	number = 0;
+	max = 9223372036854775807L;
+	if (!nptr)
+		return (0);
+	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
+		i++;
+	while (nptr[i] && is_digit(nptr[i]))
+	{
+		if (number > max / 10 || (number == max / 10 && (nptr[i] - '0') > max
+				% 10))
+			return (-1);
+		number = number * 10 + (nptr[i++] - '0');
+	}
+	return (number);
+}
+
+int	ft_atoi(const char *nptr)
+{
+	int		i;
 	int		pn;
 	long	number;
 
 	i = 0;
-	pn = 1;
 	number = 0;
 	if (!nptr)
 		return (0);
 	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
 		i++;
-	if (nptr[i] == '-' || nptr[i] == '+')
-		if (nptr[i++] == '-')
-			pn = -pn;
 	while (nptr[i] && is_digit(nptr[i]))
+	{
 		number = number * 10 + (nptr[i++] - '0');
-	return (number * pn);
+		if (number > 2147483647)
+			return (-1);
+	}
+	return ((int)number);
 }
 
 char	*ft_strdup(const char *s)
@@ -55,4 +78,11 @@ char	*ft_strdup(const char *s)
 		dest[i] = s[i];
 	dest[i] = '\0';
 	return (dest);
+}
+
+void	ft_free(t_args *coders)
+{
+	if (coders->scheduler)
+		free(coders->scheduler);
+	free(coders);
 }
