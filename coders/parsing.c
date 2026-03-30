@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/28 18:49:45 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/03/30 18:36:09 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_args	*input_error(int ac)
 	else
 		fprintf(stderr, "Error: invalid input.\n");
 	fprintf(stderr,
-		"\nInput format: number_of_coders time_to_burnout "
+		"\nInput format: ./codexion number_of_coders time_to_burnout "
 		"time_to_compile time_to_debug "
 		"time_to_refactor number_of_compiles_required "
 		"dongle_cooldown scheduler(fifo/edf)\n");
