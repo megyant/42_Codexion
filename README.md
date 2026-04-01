@@ -1,29 +1,36 @@
 # 42_Codexion
 Solving the dining philosopher's problem
 
-links:
+Dining philosophers:
 - https://www.youtube.com/watch?v=zOpzGHwJ3MU
-- https://www.youtube.com/watch?v=mvZKu0DfFLQ
 - https://suspectedoceano.notion.site/Philosophers-b1bf3c57eee6420cafa7d0900b3d3216
 - https://f0rkr.github.io/dining-philosophers-problem/
 - https://medium.com/@ridwaneelfilali/philosophers-the-dinning-problem-8ea3c0fc8cc7
-- https://eng.libretexts.org/Courses/Delta_College/Operating_System:_The_Basics/06:_Deadlock/64:_Dining_Philosopher_Problem#:~:text=Arbitrator%20solution,computers%20competing%20for%20access
-- https://begriffs.com/posts/2020-03-23-concurrent-programming.html
-- https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/
-- https://www.youtube.com/watch?v=rFYYifVj5gs
-- https://www.youtube.com/watch?v=_ruovgwXyYs
-- https://cs341.cs.illinois.edu/coursebook/Deadlock#dining-philosophers
-- https://pages.mtu.edu/~shene/NSF-3/e-Book/index.html
-- https://www.youtube.com/playlist?list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2
 - https://github.com/DeRuina/philosophers
 - https://github.com/zelhajou/ft_unix_philosophers
 - https://www.youtube.com/watch?v=UGQsvVKwe90
-- https://medium.com/@jalal92/lets-discuss-threads-grab-a-coffee-ad4d4ebf7181
 - https://medium.com/@jalal92/the-dining-philosophers-7157cc05315
 
+  
+On threads and deadlocks:
+   1. threads:  
+    - https://pages.mtu.edu/~shene/NSF-3/e-Book/index.html   
+    - https://www.youtube.com/playlist?list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2  
+    - https://medium.com/@jalal92/lets-discuss-threads-grab-a-coffee-ad4d4ebf7181   
+   2. deadlocks:  
+    - https://www.youtube.com/watch?v=rFYYifVj5gs  
+    - https://begriffs.com/posts/2020-03-23-concurrent-programming.html  
+    - https://cs341.cs.illinois.edu/coursebook/Deadlock#resource-allocation-graphs
+    - https://www.youtube.com/watch?v=_ruovgwXyYs  
+   3. both:  
+    - https://www.youtube.com/watch?v=mvZKu0DfFLQ  
+    - https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/
 
-AI workflow guidance:
-Since you have your t_args struct ready, here is a logical workflow to tackle the rest of the project step-by-step.
+  
+  
+  
+AI workflow guidance:  
+Since you have your t_args struct ready, here is a logical workflow to tackle the rest of the project step-by-step.  
 1. Data Structure Expansion
 
 Your t_args holds the rules, but you need structs to hold the state of the simulation. Define these before writing any logic.
