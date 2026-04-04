@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:41 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/28 18:41:00 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/04 21:29:08 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	main(int ac, char **av)
 	coders = parsing(ac, av);
 	if (!coders)
 		return (-1);
-	printf("%li\n", coders->time_burnout);
 	if (coders->scheduler)
 		free(coders->scheduler);
 	free(coders);

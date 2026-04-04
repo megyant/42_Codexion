@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/30 18:36:09 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/04 21:30:13 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ t_args	*allocate_struct(int ac, char **av)
 	coders->total_compiles = ft_atoi(av[6]);
 	coders->dongle_cooldown = ft_atol(av[7]);
 	coders->scheduler = ft_strdup(av[8]);
-	if (coders->number_coders < 0 || coders->time_burnout < 0
-		|| coders->time_compile < 0 || coders->time_debug < 0
-		|| coders->time_refactor < 0 || coders->total_compiles < 0
+	if (coders->number_coders <= 0 || coders->time_burnout <= 0
+		|| coders->time_compile <= 0 || coders->time_debug <= 0
+		|| coders->time_refactor <= 0 || coders->total_compiles < 0
 		|| coders->dongle_cooldown < 0 || coders->scheduler == NULL)
 	{
 		printf("Error: Invalid or missing input or "
