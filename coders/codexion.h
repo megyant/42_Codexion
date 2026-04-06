@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/04 21:36:24 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 12:23:15 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ t_args					*allocate_struct(int ac, char **av);
 
 // Error handling
 t_args					*input_error(int ac);
-void					ft_free(t_args *coders);
+t_args					*check_final_args(t_args *coders);
+void					*ft_free(t_args *coders);
 
 // Helper functions
 int						is_digit(char c);

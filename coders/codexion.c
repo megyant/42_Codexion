@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:41 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/04 21:29:08 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 10:25:24 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ int	main(int ac, char **av)
 		return (-1);
 	if (coders->scheduler)
 		free(coders->scheduler);
-	free(coders);
+	ft_free(coders);
 	return (0);
 }

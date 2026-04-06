@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 08:56:52 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/03/28 18:49:21 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 12:24:10 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ long	ft_atol(const char *nptr)
 
 	i = 0;
 	number = 0;
-	max = 9223372036854775807L;
+	max = 9223372036854775807;
 	if (!nptr)
 		return (0);
 	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
@@ -80,9 +80,12 @@ char	*ft_strdup(const char *s)
 	return (dest);
 }
 
-void	ft_free(t_args *coders)
+void	*ft_free(t_args *coders)
 {
+	if (!coders)
+		return (NULL);
 	if (coders->scheduler)
 		free(coders->scheduler);
 	free(coders);
+	return (NULL);
 }

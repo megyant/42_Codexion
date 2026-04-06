@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/04 21:30:13 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 12:22:38 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,30 @@ t_args	*allocate_struct(int ac, char **av)
 	coders->total_compiles = ft_atoi(av[6]);
 	coders->dongle_cooldown = ft_atol(av[7]);
 	coders->scheduler = ft_strdup(av[8]);
+	coders = check_final_args(coders);
+	if (!coders)
+		return(ft_free(coders));
+	return (coders);
+}
+
+t_args	*check_final_args(t_args *coders)
+{
+	if (!coders)
+		return (NULL);
 	if (coders->number_coders <= 0 || coders->time_burnout <= 0
 		|| coders->time_compile <= 0 || coders->time_debug <= 0
 		|| coders->time_refactor <= 0 || coders->total_compiles < 0
 		|| coders->dongle_cooldown < 0 || coders->scheduler == NULL)
 	{
-		printf("Error: Invalid or missing input or "
-			"overflowing numeric input.\n");
-		ft_free(coders);
-		return (NULL);
+		printf("Error: Arguments must be positive integers.\n");
+		return(ft_free(coders));
 	}
+	if (coders->time_compile > coders->time_burnout)
+	{
+		printf("Error: time_to_burnout is too short for a single compile.\n");
+		return(ft_free(coders));
+	}
+	if (coders->time_burnout < 10)
+		printf("Warning: Precision might be lost with burnout times < 10ms.\n");
 	return (coders);
 }
