@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 12:22:38 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 20:47:29 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_args	*allocate_struct(int ac, char **av)
 	coders->scheduler = ft_strdup(av[8]);
 	coders = check_final_args(coders);
 	if (!coders)
-		return(ft_free(coders));
+		return (ft_free(coders));
 	return (coders);
 }
 
@@ -99,12 +99,12 @@ t_args	*check_final_args(t_args *coders)
 		|| coders->dongle_cooldown < 0 || coders->scheduler == NULL)
 	{
 		printf("Error: Arguments must be positive integers.\n");
-		return(ft_free(coders));
+		return (ft_free(coders));
 	}
 	if (coders->time_compile > coders->time_burnout)
 	{
 		printf("Error: time_to_burnout is too short for a single compile.\n");
-		return(ft_free(coders));
+		return (ft_free(coders));
 	}
 	if (coders->time_burnout < 10)
 		printf("Warning: Precision might be lost with burnout times < 10ms.\n");
