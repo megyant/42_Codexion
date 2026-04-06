@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   codexion.c                                         :+:      :+:    :+:   */
+/*   memory_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/25 15:38:41 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 22:22:55 by mbotelho         ###   ########.fr       */
+/*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
+/*   Updated: 2026/04/06 22:21:51 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	main(int ac, char **av)
+void	*free_config(t_args *config)
 {
-	t_args	*coders;
-
-	coders = parsing(ac, av);
-	if (!coders)
-		return (-1);
-	free_config(coders);
-	return (0);
+	if (!config)
+		return (NULL);
+	if (config->scheduler)
+	{
+		free(config->scheduler);
+		config->scheduler = NULL;
+	}
+	free(config);
+	return (NULL);
 }

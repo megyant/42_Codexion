@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 20:50:41 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 22:22:47 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,43 +70,47 @@ int	check_input(char *arg)
 
 t_args	*allocate_struct(int ac, char **av)
 {
-	t_args	*coders;
+	t_args	*config;
 
-	coders = malloc(sizeof(t_args));
-	if (!coders)
+	config = malloc(sizeof(t_args));
+	if (!config)
 		return (NULL);
-	coders->number_coders = ft_atoi(av[1]);
-	coders->time_burnout = ft_atol(av[2]);
-	coders->time_compile = ft_atol(av[3]);
-	coders->time_debug = ft_atol(av[4]);
-	coders->time_refactor = ft_atol(av[5]);
-	coders->total_compiles = ft_atoi(av[6]);
-	coders->dongle_cooldown = ft_atol(av[7]);
-	coders->scheduler = ft_strdup(av[8]);
-	coders = check_final_args(coders);
-	if (!coders)
-		return (ft_free(coders));
-	return (coders);
+	config->number_coders = ft_atoi(av[1]);
+	config->time_burnout = ft_atol(av[2]);
+	config->time_compile = ft_atol(av[3]);
+	config->time_debug = ft_atol(av[4]);
+	config->time_refactor = ft_atol(av[5]);
+	config->total_compiles = ft_atoi(av[6]);
+	config->dongle_cooldown = ft_atol(av[7]);
+	config->scheduler = ft_strdup(av[8]);
+	config = check_final_args(config);
+	if (!config)
+		return (free_config(config));
+	return (config);
 }
 
-t_args	*check_final_args(t_args *coders)
+t_args	*check_final_args(t_args *config)
 {
-	if (!coders)
+	if (!config)
 		return (NULL);
-	if (coders->number_coders <= 0 || coders->time_burnout <= 0
-		|| coders->time_compile <= 0 || coders->time_debug <= 0
-		|| coders->time_refactor <= 0 || coders->total_compiles < 0
-		|| coders->dongle_cooldown < 0 || coders->scheduler == NULL)
+	if (config->time_compile <= 0 || config->time_debug <= 0
+		|| config->time_refactor <= 0 || config->total_compiles < 0
+		|| config->dongle_cooldown < 0 || config->scheduler == NULL)
 	{
 		printf("Error: Arguments must be positive integers.\n");
-		return (ft_free(coders));
+		return (free_config(config));
 	}
-	if (coders->time_compile > coders->time_burnout)
+	if (config->number_coders < 2)
+	{
+		printf("Error: Must have at least two coders.\n");
+		return (free_config(config));
+	}
+	if (config->time_compile > config->time_burnout)
 	{
 		printf("Error: time_to_burnout is too short for a single compile.\n");
-		return (ft_free(coders));
+		return (free_config(config));
 	}
-	if (coders->time_burnout < 10)
+	if (config->time_burnout < 10)
 		printf("Warning: Precision might be lost with burnout times < 10ms.\n");
-	return (coders);
+	return (config);
 }
