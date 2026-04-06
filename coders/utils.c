@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 08:56:52 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 12:24:10 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/06 20:53:42 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,10 @@ void	*ft_free(t_args *coders)
 	if (!coders)
 		return (NULL);
 	if (coders->scheduler)
-		free(coders->scheduler);
+    {
+        free(coders->scheduler);
+        coders->scheduler = NULL;
+	}
 	free(coders);
 	return (NULL);
 }
