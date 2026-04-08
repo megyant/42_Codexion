@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 22:22:47 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/08 19:32:07 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_args	*parsing(int ac, char **av)
 		return (input_error(ac));
 	while (i < (ac - 1))
 	{
-		if (!check_input(av[i]))
+		if (!check_input(av[i]))  // check if all but last are numbers and not negative
 		{
 			printf("Error: Invalid input\n");
 			return (NULL);
@@ -33,7 +33,7 @@ t_args	*parsing(int ac, char **av)
 		printf("Error: Scheduler must be fifo or edf\n");
 		return (NULL);
 	}
-	return (allocate_struct(ac, av));
+	return (init_args(ac, av));
 }
 
 t_args	*input_error(int ac)
@@ -45,10 +45,10 @@ t_args	*input_error(int ac)
 	else
 		fprintf(stderr, "Error: invalid input.\n");
 	fprintf(stderr,
-		"\nInput format: ./codexion number_of_coders time_to_burnout "
-		"time_to_compile time_to_debug "
-		"time_to_refactor number_of_compiles_required "
-		"dongle_cooldown scheduler(fifo/edf)\n");
+			"\nInput format: ./codexion number_of_coders time_to_burnout "
+			"time_to_compile time_to_debug "
+			"time_to_refactor number_of_compiles_required "
+			"dongle_cooldown scheduler(fifo/edf)\n");
 	return (NULL);
 }
 
@@ -68,7 +68,7 @@ int	check_input(char *arg)
 	return (1);
 }
 
-t_args	*allocate_struct(int ac, char **av)
+t_args	*init_args(int ac, char **av)
 {
 	t_args	*config;
 
@@ -82,10 +82,13 @@ t_args	*allocate_struct(int ac, char **av)
 	config->time_refactor = ft_atol(av[5]);
 	config->total_compiles = ft_atoi(av[6]);
 	config->dongle_cooldown = ft_atol(av[7]);
-	config->scheduler = ft_strdup(av[8]);
+	if (strcmp(av[8], "fifo") == 0)
+		config->scheduler = 1; // edf
+	else
+		config->scheduler = 0; // fifo
 	config = check_final_args(config);
 	if (!config)
-		return (free_config(config));
+		return (ft_free(config));
 	return (config);
 }
 
@@ -95,22 +98,25 @@ t_args	*check_final_args(t_args *config)
 		return (NULL);
 	if (config->time_compile <= 0 || config->time_debug <= 0
 		|| config->time_refactor <= 0 || config->total_compiles < 0
-		|| config->dongle_cooldown < 0 || config->scheduler == NULL)
+		|| config->dongle_cooldown < 0 || (config->scheduler != 1
+			&& config->scheduler != 0)) // overall check again for redundancy
 	{
 		printf("Error: Arguments must be positive integers.\n");
-		return (free_config(config));
+		return (ft_free(config));
 	}
-	if (config->number_coders < 2)
-	{
-		printf("Error: Must have at least two coders.\n");
-		return (free_config(config));
-	}
-	if (config->time_compile > config->time_burnout)
+	if (config->number_coders < 2) // warning only
+		printf("Warning: Only one coder and dongle available. "
+				"Simulation is doomed to failure\n");
+	if (config->time_compile > config->time_burnout) // error
 	{
 		printf("Error: time_to_burnout is too short for a single compile.\n");
-		return (free_config(config));
+		return (ft_free(config));
 	}
-	if (config->time_burnout < 10)
+	if (config->time_burnout < 10) // warning only for time percision
 		printf("Warning: Precision might be lost with burnout times < 10ms.\n");
+	if (config->time_burnout <= (config->time_compile + config->time_debug
+			+ config->time_refactor)) // warning only
+		printf("Warning: Burnout time is smaller or equal to a full coder cycle. "
+				"This may lead to burnout\n");
 	return (config);
 }

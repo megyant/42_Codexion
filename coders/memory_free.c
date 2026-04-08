@@ -6,21 +6,49 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 22:21:51 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/08 20:01:22 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	*free_config(t_args *config)
+void	*ft_free(void *ptr)
 {
-	if (!config)
+	if (!ptr)
 		return (NULL);
-	if (config->scheduler)
+	free(ptr);
+	return (NULL);
+}
+
+
+void	*free_workspace(t_workspace *workspace)
+{
+	int i;
+
+	if (!workspace)
+		return (NULL);
+	if (workspace->dongles)
 	{
-		free(config->scheduler);
-		config->scheduler = NULL;
+		i = -1;
+		while(++i < workspace->config->number_coders)
+		{
+			ft_free(workspace->dongles[i].queue.heap);
+			pthread_mutex_destroy(&workspace->dongles[i].mutex);
+			pthread_cond_destroy(&workspace->dongles[i].cond);
+		}
+		ft_free(workspace->dongles);
 	}
-	free(config);
+	if (workspace->coders)
+	{
+		i = -1;
+		while (++i < workspace->config->number_coders)
+		{
+			pthread_mutex_destroy(&workspace->coders[i].state_lock);
+		}
+		ft_free(workspace->coders);
+	}
+	pthread_mutex_destroy(&workspace->stop_lock);
+	pthread_mutex_destroy(&workspace->print_lock);
+	ft_free(workspace);
 	return (NULL);
 }
