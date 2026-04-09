@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/08 20:01:37 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/09 16:38:08 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 # define CODEXION_H
 
 # include <pthread.h>
+# include <stdint.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/time.h>
 
 typedef struct s_workspace	t_workspace;
 
@@ -43,7 +45,7 @@ typedef struct s_priority_queue
 {
 	t_request				*heap; // The "Sign-in Sheet"
 	int						size; // Number of names in the sheet
-	int						capacity; // Number of rows in the sheet
+	int						capacity; // Number of rows in the sheet a.k.a number of coders
 }							t_priority_queue;
 
 typedef struct s_dongle
@@ -87,18 +89,25 @@ int							check_input(char *arg);
 // Initialize structures
 t_args						*init_args(int ac, char **av);
 t_workspace					*init_workspace(t_args *config);
+int 						init_dongles(t_workspace *workspace);
+int 						init_queue(t_priority_queue *queue, t_args *config);
+int 						init_coders(t_workspace *workspace);
 
+// Part of the simulator
+void *coder_routine (void *arg);
 
 // Error handling
 t_args						*input_error(int ac);
 t_args						*check_final_args(t_args *config);
 void						*ft_free(void *ptr);
 void						*free_workspace(t_workspace *workspace);
+void						*free_workspace_dongles(t_workspace *workspace);
 
 // Helper functions
 int							is_digit(char c);
 long						ft_atol(const char *nptr);
 int							ft_atoi(const char *nptr);
-char						*ft_strdup(const char *s);
+void						*ft_calloc(size_t nmemb, size_t size);
+//char						*ft_strdup(const char *s);
 
 #endif

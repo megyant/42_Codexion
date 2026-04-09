@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 08:56:52 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/06 22:21:37 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:48:51 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,29 @@ int	ft_atoi(const char *nptr)
 	return ((int)number);
 }
 
-char	*ft_strdup(const char *s)
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	size_t			i;
+	unsigned char	*ptr;
+
+	if (nmemb == 0 || size == 0)
+		return (malloc(0));
+	if (nmemb > SIZE_MAX / size)
+	{
+		return (NULL);
+	}
+	ptr = (unsigned char *)malloc(nmemb * size);
+	i = -1;
+	if (!ptr)
+		return (NULL);
+	while (++i < (nmemb * size))
+	{
+		ptr[i] = 0;
+	}
+	return ((void *)ptr);
+}
+
+/* char	*ft_strdup(const char *s)
 {
 	char	*dest;
 	size_t	s_len;
@@ -78,4 +100,4 @@ char	*ft_strdup(const char *s)
 		dest[i] = s[i];
 	dest[i] = '\0';
 	return (dest);
-}
+} */

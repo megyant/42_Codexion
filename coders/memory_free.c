@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/08 20:01:22 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:55:03 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,29 @@ void	*ft_free(void *ptr)
 	return (NULL);
 }
 
-
-void	*free_workspace(t_workspace *workspace)
+void	*free_workspace_dongles(t_workspace *workspace)
 {
 	int i;
 
-	if (!workspace)
-		return (NULL);
 	if (workspace->dongles)
 	{
 		i = -1;
-		while(++i < workspace->config->number_coders)
+		while (++i < workspace->config->number_coders)
 		{
-			ft_free(workspace->dongles[i].queue.heap);
+			if (workspace->dongles[i].queue.heap)
+				ft_free(workspace->dongles[i].queue.heap);
 			pthread_mutex_destroy(&workspace->dongles[i].mutex);
 			pthread_cond_destroy(&workspace->dongles[i].cond);
 		}
 		ft_free(workspace->dongles);
 	}
+	return (NULL);
+}
+
+void	*free_workspace_coders(t_workspace *workspace)
+{
+	int i;
+
 	if (workspace->coders)
 	{
 		i = -1;
@@ -47,6 +52,17 @@ void	*free_workspace(t_workspace *workspace)
 		}
 		ft_free(workspace->coders);
 	}
+	return (NULL);
+}
+
+void	*free_workspace(t_workspace *workspace)
+{
+	int i;
+
+	if (!workspace)
+		return (NULL);
+	free_workspace_dongles(workspace);
+	free_workspace_coders(workspace);
 	pthread_mutex_destroy(&workspace->stop_lock);
 	pthread_mutex_destroy(&workspace->print_lock);
 	ft_free(workspace);
