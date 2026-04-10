@@ -18,6 +18,7 @@ void *coder_routine (void *arg)
     
     while (coder->workspace.running = true)
     {
+        check_queue(coder)
         compile(coder);
         debug(coder);
         refactor(coder);
