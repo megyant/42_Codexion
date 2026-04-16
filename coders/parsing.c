@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/08 19:32:07 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/16 11:08:25 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_args	*parsing(int ac, char **av)
 		return (input_error(ac));
 	while (i < (ac - 1))
 	{
-		if (!check_input(av[i]))  // check if all but last are numbers and not negative
+		if (!check_input(av[i]))
+			// check if all but last are numbers and not negative
 		{
 			printf("Error: Invalid input\n");
 			return (NULL);
@@ -45,10 +46,10 @@ t_args	*input_error(int ac)
 	else
 		fprintf(stderr, "Error: invalid input.\n");
 	fprintf(stderr,
-			"\nInput format: ./codexion number_of_coders time_to_burnout "
-			"time_to_compile time_to_debug "
-			"time_to_refactor number_of_compiles_required "
-			"dongle_cooldown scheduler(fifo/edf)\n");
+		"\nInput format: ./codexion number_of_coders time_to_burnout "
+		"time_to_compile time_to_debug "
+		"time_to_refactor number_of_compiles_required "
+		"dongle_cooldown scheduler(fifo/edf)\n");
 	return (NULL);
 }
 
@@ -106,7 +107,7 @@ t_args	*check_final_args(t_args *config)
 	}
 	if (config->number_coders < 2) // warning only
 		printf("Warning: Only one coder and dongle available. "
-				"Simulation is doomed to failure\n");
+			"Simulation is doomed to failure\n");
 	if (config->time_compile > config->time_burnout) // error
 	{
 		printf("Error: time_to_burnout is too short for a single compile.\n");
@@ -116,7 +117,7 @@ t_args	*check_final_args(t_args *config)
 		printf("Warning: Precision might be lost with burnout times < 10ms.\n");
 	if (config->time_burnout <= (config->time_compile + config->time_debug
 			+ config->time_refactor)) // warning only
-		printf("Warning: Burnout time is smaller or equal to a full coder cycle. "
-				"This may lead to burnout\n");
+		printf("Warning: Burnout time is smaller or equal to a coder cycle. "
+			"This may lead to burnout\n");
 	return (config);
 }

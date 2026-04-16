@@ -6,13 +6,12 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 16:51:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/09 16:52:38 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/16 11:09:32 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "codexion.h"
+#include "codexion.h"
 
-void    print_message(str message, t_coder *coder, int id)
+void	print_message(str message, t_coder *coder, int id)
 {
-    
 }

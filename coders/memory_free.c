@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/09 10:55:03 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/16 10:53:59 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	*ft_free(void *ptr)
 
 void	*free_workspace_dongles(t_workspace *workspace)
 {
-	int i;
+	int	i;
 
 	if (workspace->dongles)
 	{
@@ -41,7 +41,7 @@ void	*free_workspace_dongles(t_workspace *workspace)
 
 void	*free_workspace_coders(t_workspace *workspace)
 {
-	int i;
+	int	i;
 
 	if (workspace->coders)
 	{
@@ -57,7 +57,7 @@ void	*free_workspace_coders(t_workspace *workspace)
 
 void	*free_workspace(t_workspace *workspace)
 {
-	int i;
+	int	i;
 
 	if (!workspace)
 		return (NULL);

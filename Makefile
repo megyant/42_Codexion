@@ -6,7 +6,7 @@
 #    By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 15:50:00 by mbotelho          #+#    #+#              #
-#    Updated: 2026/04/06 22:21:16 by mbotelho         ###   ########.fr        #
+#    Updated: 2026/04/16 11:12:18 by mbotelho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,12 @@ FOLDER = coders
 SRCS = $(FOLDER)/codexion.c \
 	   $(FOLDER)/parsing.c \
 	   $(FOLDER)/utils.c \
+	   $(FOLDER)/utils2.c \
 	   $(FOLDER)/init.c \
-	   $(FOLDER)/memory_free.c
+	   $(FOLDER)/memory_free.c \
+	   $(FOLDER)/simulation.c \
+	   $(FOLDER)/handle_mutex_thread.c \
+	   $(FOLDER)/gettime.c
 
 OBJS = $(SRCS:.c=.o)
 

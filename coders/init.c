@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 21:02:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/09 11:47:29 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/16 11:06:41 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,81 +16,85 @@ t_workspace	*init_workspace(t_args *config)
 {
 	t_workspace	*workspace;
 
-    if (!config)
-        return (NULL);
+	if (!config)
+		return (NULL);
 	workspace = calloc(1, sizeof(t_workspace));
 	if (!workspace)
 		return (NULL);
-    workspace->config = config;
-    workspace->coders = calloc(config->number_coders, sizeof(t_coder));
+	workspace->config = config;
+	workspace->coders = calloc(config->number_coders, sizeof(t_coder));
 	workspace->dongles = calloc(config->number_coders, sizeof(t_dongle));
-    if (!workspace->coders || !workspace->dongles)
-        return (free_workspace(workspace));
+	if (!workspace->coders || !workspace->dongles)
+		return (free_workspace(workspace));
 	workspace->running = true;
-    pthread_mutex_init(&workspace->stop_lock, NULL);
-    pthread_mutex_init(&workspace->print_lock, NULL);
-    if (init_dongles(workspace) != 0)
-        return (free_workspace(workspace));
-    if (init_coders(workspace) != 0)
-        return (free_workspace(workspace));
-    workspace->start_simulation = 0; // start only after all background processes are done
-    return (workspace);
+	pthread_mutex_init(&workspace->stop_lock, NULL);
+	pthread_mutex_init(&workspace->print_lock, NULL);
+	if (init_dongles(workspace) != 0)
+		return (free_workspace(workspace));
+	if (init_coders(workspace) != 0)
+		return (free_workspace(workspace));
+	workspace->start_simulation = 0;
+		// start only after all background processes are done
+	return (workspace);
 }
 
-int init_dongles(t_workspace *workspace)
+int	init_dongles(t_workspace *workspace)
 {
-    int i;
+	int	i;
 
-    if (!workspace)
-        return(1);
-    i = -1;
-    while (++i < workspace->config->number_coders)
-    {
-        workspace->dongles[i].dongle_id = i;
-        workspace->dongles[i].last_dongle_usage = 0;
-        workspace->dongles[i].current_user = -1;
-        pthread_mutex_init(&workspace->dongles[i].mutex, NULL);
-        pthread_cond_init(&workspace->dongles[i].cond, NULL);
-        if (init_queue(&workspace->dongles[i].queue, workspace->config) != 0)
-            return (1);
-    }
-    return (0);
+	if (!workspace)
+		return (1);
+	i = -1;
+	while (++i < workspace->config->number_coders)
+	{
+		workspace->dongles[i].dongle_id = i;
+		workspace->dongles[i].last_dongle_usage = 0;
+		workspace->dongles[i].current_user = -1;
+		pthread_mutex_init(&workspace->dongles[i].mutex, NULL);
+		pthread_cond_init(&workspace->dongles[i].cond, NULL);
+		if (init_queue(&workspace->dongles[i].queue, workspace->config) != 0)
+			return (1);
+	}
+	return (0);
 }
 
-int init_queue(t_priority_queue *queue, t_args *config)
+int	init_queue(t_priority_queue *queue, t_args *config)
 {
-    if (!queue || !config)
-        return (1);
-    queue->heap = malloc(sizeof(t_request) * config->number_coders);
-    if (!queue->heap)
-        return (1);
-    queue->size = 0;
-    queue->capacity = config->number_coders;
-    return (0);
+	if (!queue || !config)
+		return (1);
+	queue->heap = malloc(sizeof(t_request) * config->number_coders);
+	if (!queue->heap)
+		return (1);
+	queue->size = 0;
+	queue->capacity = config->number_coders;
+	return (0);
 }
 
-int init_coders(t_workspace *workspace)
+int	init_coders(t_workspace *workspace)
 {
-    int i;
-    int max;
+	int	i;
+	int	max;
 
-    if (!workspace)
-        return (1);
-    i = -1;
-    max = workspace->config->number_coders;
-    while (++i < max)
-    {
-        workspace->coders[i].id = i + 1;
-        workspace->coders[i].compile_count = 0;
-        workspace->coders[i].last_compile_time = 0;
-        workspace->coders[i].finished_compiling = false;
-        workspace->coders[i].workspace = workspace;
-        workspace->coders[i].left_dongle = &workspace->dongles[i];
-        workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max]; // Equivalent of doing i + 1 and if i == max dongle = 0
-        pthread_mutex_init(&workspace->coders[i].state_lock, NULL);
-        if (pthread_create(&workspace->coders[i].thread_id, NULL, coder_routine, // to be created coder_routine
-            &workspace->coders[i]) != 0)
-            return (1);
-    }
-    return (0);
+	if (!workspace)
+		return (1);
+	i = -1;
+	max = workspace->config->number_coders;
+	while (++i < max)
+	{
+		workspace->coders[i].id = i + 1;
+		workspace->coders[i].compile_count = 0;
+		workspace->coders[i].last_compile_time = 0;
+		workspace->coders[i].finished_compiling = false;
+		workspace->coders[i].workspace = workspace;
+		workspace->coders[i].left_dongle = &workspace->dongles[i];
+		workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max];
+			// Equivalent of doing i + 1 and if i == max dongle = 0
+		pthread_mutex_init(&workspace->coders[i].state_lock, NULL);
+		if (pthread_create(&workspace->coders[i].thread_id,
+				NULL,
+				coder_routine, // to be created coder_routine
+				&workspace->coders[i]) != 0)
+			return (1);
+	}
+	return (0);
 }
