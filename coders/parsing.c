@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/20 16:18:11 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/21 20:57:13 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ t_args	*init_args(int ac, char **av)
 	config->total_compiles = ft_atoi(av[6]);
 	config->dongle_cooldown = ft_atol(av[7]);
 	if (strcmp(av[8], "fifo") == 0)
-		config->scheduler = 1; // fifo
+		config->scheduler = 0; // fifo
 	else
-		config->scheduler = 0; // edf
+		config->scheduler = 1; // edf
 	config = check_final_args(config);
 	if (!config)
 		return (ft_free(config));

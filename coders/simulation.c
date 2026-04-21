@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 11:46:14 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/21 12:05:12 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/21 21:55:21 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,79 @@ int	get_sim_status(t_workspace *workspace)
 	return (status);
 }
 
+
+
+int	request_dongle(t_coder *coder, t_dongle *dongle)
+{
+	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
+	queue_management(coder, dongle);
+	while (get_sim_status(coder->workspace) 
+		&& check_top_queue(dongle) != coder->coder_id)
+		pthread_cond_wait(&dongle->cond, &dongle->mutex);
+	if (!get_sim_status(coder->workspace))
+	{
+		remove_heap(dongle->coder_id); // to do
+		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
+		return (0);
+	}
+	safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
+	return (1);
+}
+
+void	remove_heap(int id)
+{
+	
+}
+
+int	check_top_queue(t_dongle *dongle)
+{
+	if (dongle->queue.size == 0)
+		return (-1);
+	return (dongle->queue.heap[0].coder_id);
+}
+
+void queue_management(t_coder *coder, t_dongle *dongle)
+{
+	long priority;
+
+	if (coder->workspace->config->scheduler == 1) //edf
+		priority = coder->last_compile_time + coder->workspace->config->time_burnout;
+	else //fifo
+		priority = get_current_time();
+	insert_heap(dongle, coder->id, priority);
+}
+
+void	insert_heap(t_dongle *dongle, int id, long priority_number)
+{
+	int i;
+	t_request temp;
+	int parent_thread; // think of a tree, parent is halfway between children
+
+	i = dongle->queue.size;
+	dongle->queue.heap[i].coder_id = id;
+	dongle->queue.heap[i].priotity_value = priority_number;
+	dongle->queue.size++;
+
+	while (i > 0)
+	{
+		parent_thread = (i - 1) / 2;
+		if (dongle->queue.heap[i].priotity_value >=
+			dongle->queue.heap[parent_thread].priotity_value)
+			break ;
+		temp = dongle->queue.heap[i];
+		dongle->queue.heap[i] = dongle->queue.heap[parent_thread];
+		dongle->queue.heap[parent_thread] = temp;
+		i = parent_thread;
+	}
+}
+
 int	grab_dongles(t_coder *coder)
 {
+	request_dongle(coder, coder->right_dongle);
+	request_dongle(coder, coder->left_dongle);
 	return 0;
 }
 
 void	release_dongles(t_coder *coder)
 {
-	printf("yayy");
 }

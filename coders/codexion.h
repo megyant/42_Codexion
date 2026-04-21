@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/21 12:03:32 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:42:51 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ typedef struct s_priority_queue
 typedef struct s_dongle
 {
 	int						dongle_id;
-	pthread_mutex_t mutex; // protect "Sign-in Sheet" for one dongle
-	pthread_cond_t cond;   // waiting room
+	pthread_mutex_t 		mutex; // protect "Sign-in Sheet" for one dongle
+	pthread_cond_t 			cond;   // waiting room
 	long					last_dongle_usage;
-	int current_user; // if -1 dongle is free
+	int 					current_user; // if -1 dongle is free
 	t_priority_queue		queue;
 }							t_dongle;
 
