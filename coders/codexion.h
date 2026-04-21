@@ -6,14 +6,14 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/16 11:14:29 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/21 12:03:32 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CODEXION_H
 # define CODEXION_H
 
-# include <error.h>
+# include <errno.h>
 # include <pthread.h>
 # include <stdbool.h>
 # include <stdint.h>
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 typedef struct s_workspace	t_workspace;
 
@@ -108,17 +109,27 @@ int							init_coders(t_workspace *workspace);
 
 // Part of the simulator
 void						*coder_routine(void *arg);
+void						compile(t_coder *coder);
+void						debug(t_coder *coder);
+void						refactor(t_coder *coder);
+void						wait_threads(t_workspace *workspace);
+void						print_message(char *message, t_coder *coder,
+								int id);
+int							get_sim_status(t_workspace *workspace);
+int							grab_dongles(t_coder *coder);
+void						release_dongles(t_coder *coder);
 
 // Time
 long						get_current_time(void);
-int							ft_usleep(long miliseconds);
+int							ft_usleep(long miliseconds, t_workspace *workspace);
 
 // mutex and thread
 void						handle_mutex_error(int status, t_opcode opcode,
 								t_workspace *workspace);
 void						safe_mutex_handle(pthread_mutex_t *mutex,
 								t_opcode opcode, t_workspace *workspace);
-void						handle_thread_error(int status, t_opcode opcode);
+void						handle_thread_error(int status, t_opcode opcode,
+								t_workspace *workspace);
 void						safe_thread_handle(pthread_t *thread,
 								void *(*routine)(void *), void *data,
 								t_opcode opcode);

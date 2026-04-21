@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/16 10:53:59 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/20 16:06:19 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void	*free_workspace_coders(t_workspace *workspace)
 		i = -1;
 		while (++i < workspace->config->number_coders)
 		{
-			pthread_mutex_destroy(&workspace->coders[i].state_lock);
+			safe_mutex_handle(&workspace->coders[i].state_lock, DESTROY,
+				workspace);
 		}
 		ft_free(workspace->coders);
 	}
@@ -57,8 +58,6 @@ void	*free_workspace_coders(t_workspace *workspace)
 
 void	*free_workspace(t_workspace *workspace)
 {
-	int	i;
-
 	if (!workspace)
 		return (NULL);
 	free_workspace_dongles(workspace);

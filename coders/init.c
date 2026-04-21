@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 21:02:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/16 11:06:41 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/21 11:45:51 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ t_workspace	*init_workspace(t_args *config)
 		return (free_workspace(workspace));
 	if (init_coders(workspace) != 0)
 		return (free_workspace(workspace));
-	workspace->start_simulation = 0;
-		// start only after all background processes are done
+	workspace->start_simulation = 0;// start only after all background processes are done
 	return (workspace);
 }
 
@@ -75,8 +74,6 @@ int	init_coders(t_workspace *workspace)
 	int	i;
 	int	max;
 
-	if (!workspace)
-		return (1);
 	i = -1;
 	max = workspace->config->number_coders;
 	while (++i < max)
@@ -87,13 +84,15 @@ int	init_coders(t_workspace *workspace)
 		workspace->coders[i].finished_compiling = false;
 		workspace->coders[i].workspace = workspace;
 		workspace->coders[i].left_dongle = &workspace->dongles[i];
-		workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max];
-			// Equivalent of doing i + 1 and if i == max dongle = 0
-		pthread_mutex_init(&workspace->coders[i].state_lock, NULL);
-		if (pthread_create(&workspace->coders[i].thread_id,
-				NULL,
-				coder_routine, // to be created coder_routine
-				&workspace->coders[i]) != 0)
+		workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max]; // Equivalent of doing i + 1 and if i == max dongle = 0
+		safe_mutex_handle(&workspace->coders[i].state_lock, INIT, workspace);
+	}
+	i = -1;
+	while (++i < max)
+	{
+		safe_thread_handle(&workspace->coders[i].thread_id, coder_routine,
+			&workspace->coders[i], CREATE);
+		if (workspace->running == false)
 			return (1);
 	}
 	return (0);
