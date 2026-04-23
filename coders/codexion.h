@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 18:56:13 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 19:16:07 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,24 @@ typedef struct s_args
 
 typedef struct s_request // The information put in the "Sign-in Sheet"
 {
-	int coder_id;
-	long priority_value;
+	int		coder_id;
+	long	priority_value;
 }							t_request;
 
 typedef struct s_priority_queue
 {
-	t_request *heap; // The "Sign-in Sheet"
-	int size;        // Number of names in the sheet
-	int capacity;    // Number of rows in the sheet a.k.a number of coders
+	t_request	*heap; // The "Sign-in Sheet"
+	int			size;        // Number of names in the sheet
+	int			capacity;    // Number of rows in the sheet a.k.a number of coders
 }							t_priority_queue;
 
 typedef struct s_dongle
 {
 	int						dongle_id;
-	pthread_mutex_t 		mutex; // protect "Sign-in Sheet" for one dongle
-	pthread_cond_t 			cond;   // waiting room
+	pthread_mutex_t			mutex; // protect "Sign-in Sheet" for one dongle
+	pthread_cond_t			cond;   // waiting room
 	long					last_dongle_usage;
-	int 					current_user; // if -1 dongle is free
+	int						current_user; // if -1 dongle is free
 	t_priority_queue		queue;
 }							t_dongle;
 
@@ -92,8 +92,8 @@ typedef struct s_workspace
 	t_dongle				*dongles;
 	long					start_simulation;
 	bool					running;
-	pthread_mutex_t stop_lock;  // protect simulation status
-	pthread_mutex_t print_lock; // protect terminal output
+	pthread_mutex_t			stop_lock;  // protect simulation status
+	pthread_mutex_t			print_lock; // protect terminal output
 }							t_workspace;
 
 // Reading the input
@@ -106,7 +106,7 @@ t_workspace					*init_workspace(t_args *config);
 int							init_dongles(t_workspace *workspace);
 int							init_queue(t_priority_queue *queue, t_args *config);
 int							init_coders(t_workspace *workspace);
-int 						init_threads(t_workspace *workspace, int max);
+int							init_threads(t_workspace *workspace, int max);
 
 // Part of the simulator
 void						*coder_routine(void *arg);
@@ -123,10 +123,12 @@ int							request_dongle(t_coder *coder, t_dongle *dongle);
 void						remove_heap(t_dongle *dongle, int i);
 void						bubble_down(t_dongle *dongle, int i);
 int							heap_peek(t_dongle *dongle);
-void 						queue_management(t_coder *coder, t_dongle *dongle);
-void 						bubble_up(t_dongle *dongle, int i);
-void						insert_heap(t_dongle *dongle, int id, long priority_number);
-void 						release_single_dongle(t_coder *coder, t_dongle *dongle);
+void						queue_management(t_coder *coder, t_dongle *dongle);
+void						bubble_up(t_dongle *dongle, int i);
+void						insert_heap(t_dongle *dongle, int id,
+								long priority_number);
+void						release_single_dongle(t_coder *coder,
+								t_dongle *dongle);
 void						release_dongles(t_coder *coder);
 
 // Time

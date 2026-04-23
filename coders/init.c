@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 21:02:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 19:00:53 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 19:18:18 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,23 +87,21 @@ int	init_coders(t_workspace *workspace)
 		workspace->coders[i].finished_compiling = false;
 		workspace->coders[i].workspace = workspace;
 		workspace->coders[i].left_dongle = &workspace->dongles[i];
-		workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max]; // Equivalent of doing i + 1 and if i == max dongle = 0
+		workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max];
 		safe_mutex_handle(&workspace->coders[i].state_lock, INIT, workspace);
 		safe_thread_handle(&workspace->coders[i].thread_id, coder_routine,
 			&workspace->coders[i], CREATE);
 	}
-	
 	return (0);
 }
 
-int init_threads(t_workspace *workspace, int max)
+int	init_threads(t_workspace *workspace, int max)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < max)
 	{
-		
 		if (workspace->running == false)
 			return (1);
 	}

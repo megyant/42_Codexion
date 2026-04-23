@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 10:38:25 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/21 11:51:49 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 19:16:53 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void	handle_mutex_error(int status, t_opcode opcode, t_workspace *workspace)
 		fprintf(stderr, "The value specified by attr is invalid.\n");
 	else if (EDEADLK == status)
 		fprintf(stderr,
-				"A deadlock would occur if the thread blocked"
-				"waiting for mutex.\n");
+			"A deadlock would occur if the thread blocked"
+			"waiting for mutex.\n");
 	else if (EPERM == status)
 		fprintf(stderr, "The current thread does not hold on mutex.\n");
 	else if (ENOMEM == status)
 		fprintf(stderr,
-				"The process cannot allocate enough memory to create"
-				"another mutex.\n");
+			"The process cannot allocate enough memory to create"
+			"another mutex.\n");
 	else if (EBUSY == status)
 		fprintf(stderr, "Mutex is locked.\n");
 	if (workspace)

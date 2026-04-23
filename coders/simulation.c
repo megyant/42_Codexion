@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 11:46:14 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 18:48:58 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 19:23:19 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 /* void	start_simulation(t_workspace *workspace)
 {
+	t_coder	*coder;
+
 	if (workspace->config->number_of_compiles_required == 0)
 		return ;
 	else if (workspace->config->number_of_compiles_required == 1)
 		;//to do
 	else
-		
 } */
-
 void	*coder_routine(void *data)
 {
 	t_coder	*coder;
@@ -30,8 +30,8 @@ void	*coder_routine(void *data)
 	wait_threads(coder->workspace);
 	while (get_sim_status(coder->workspace))
 	{
-		if(!grab_dongles(coder))
-			break;
+		if (!grab_dongles(coder))
+			break ;
 		compile(coder);
 		release_dongles(coder);
 		debug(coder);
@@ -49,7 +49,7 @@ void	compile(t_coder *coder)
 	ft_usleep(coder->workspace->config->time_compile, coder->workspace);
 	safe_mutex_handle(&coder->state_lock, LOCK, coder->workspace);
 	coder->compile_count++;
-	if(coder->compile_count == coder->workspace->config->total_compiles)
+	if (coder->compile_count == coder->workspace->config->total_compiles)
 		coder->finished_compiling = true;
 	safe_mutex_handle(&coder->state_lock, UNLOCK, coder->workspace);
 }
@@ -68,32 +68,29 @@ void	refactor(t_coder *coder)
 
 int	get_sim_status(t_workspace *workspace)
 {
-	int status;
-	
+	int	status;
+
 	safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
 	status = (int)workspace->running;
 	safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
-
 	return (status);
 }
 
-
-
 int	request_dongle(t_coder *coder, t_dongle *dongle)
 {
-	int i;
+	int	i;
 
 	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	queue_management(coder, dongle);
 	while (get_sim_status(coder->workspace) && (heap_peek(dongle) != coder->id
-	|| dongle->current_user != -1))
+			|| dongle->current_user != -1))
 		pthread_cond_wait(&dongle->cond, &dongle->mutex);
 	if (!get_sim_status(coder->workspace))
 	{
 		i = -1;
 		while (++i < dongle->queue.size)
-			if(dongle->queue.heap[i].coder_id == coder->id)
-				break;
+			if (dongle->queue.heap[i].coder_id == coder->id)
+				break ;
 		remove_heap(dongle, i);
 		pthread_cond_broadcast(&dongle->cond);
 		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
@@ -106,8 +103,7 @@ int	request_dongle(t_coder *coder, t_dongle *dongle)
 
 void	remove_heap(t_dongle *dongle, int i)
 {
-	if (dongle->queue.size == 0 || i < 0
-	|| i >= dongle->queue.size)
+	if (dongle->queue.size == 0 || i < 0 || i >= dongle->queue.size)
 		return ;
 	dongle->queue.size--;
 	if (i < dongle->queue.size)
@@ -120,23 +116,23 @@ void	remove_heap(t_dongle *dongle, int i)
 
 void	bubble_down(t_dongle *dongle, int i)
 {
-	int left;
-	int right;
-	int smallest;
-	t_request temp;
-	
+	int			left;
+	int			right;
+	int			smallest;
+	t_request	temp;
+
 	while (1)
 	{
 		left = 2 * i + 1;
 		right = 2 * i + 2;
 		smallest = i;
-		if (left < dongle->queue.size &&
-		(dongle->queue.heap[left].priority_value <
-		dongle->queue.heap[smallest].priority_value))
+		if (left < dongle->queue.size
+			&& (dongle->queue.heap[left].priority_value
+				< dongle->queue.heap[smallest].priority_value))
 			smallest = left;
-		if (right < dongle->queue.size &&
-		(dongle->queue.heap[right].priority_value <
-		dongle->queue.heap[smallest].priority_value))
+		if (right < dongle->queue.size
+			&& (dongle->queue.heap[right].priority_value
+				< dongle->queue.heap[smallest].priority_value))
 			smallest = right;
 		if (smallest == i)
 			break ;
@@ -154,27 +150,28 @@ int	heap_peek(t_dongle *dongle)
 	return (dongle->queue.heap[0].coder_id);
 }
 
-void queue_management(t_coder *coder, t_dongle *dongle)
+void	queue_management(t_coder *coder, t_dongle *dongle)
 {
-	long priority;
+	long	priority;
 
-	if (coder->workspace->config->scheduler == 1) //edf
-		priority = coder->last_compile_time + coder->workspace->config->time_burnout;
-	else //fifo
+	if (coder->workspace->config->scheduler == 1)
+		priority = coder->last_compile_time
+			+ coder->workspace->config->time_burnout;
+	else
 		priority = get_current_time();
 	insert_heap(dongle, coder->id, priority);
 }
 
-void bubble_up(t_dongle *dongle, int i)
+void	bubble_up(t_dongle *dongle, int i)
 {
-	int parent_thread;
-	t_request temp;
+	int			parent_thread;
+	t_request	temp;
 
 	while (i > 0)
 	{
 		parent_thread = (i - 1) / 2;
-		if (dongle->queue.heap[i].priority_value >=
-			dongle->queue.heap[parent_thread].priority_value)
+		if (dongle->queue.heap[i].priority_value
+			>= dongle->queue.heap[parent_thread].priority_value)
 			break ;
 		temp = dongle->queue.heap[i];
 		dongle->queue.heap[i] = dongle->queue.heap[parent_thread];
@@ -185,7 +182,7 @@ void bubble_up(t_dongle *dongle, int i)
 
 void	insert_heap(t_dongle *dongle, int id, long priority_number)
 {
-	int i;
+	int	i;
 
 	if (dongle->queue.size >= dongle->queue.capacity)
 		return ;
@@ -198,8 +195,8 @@ void	insert_heap(t_dongle *dongle, int id, long priority_number)
 
 int	grab_dongles(t_coder *coder)
 {
-	t_dongle *first;
-	t_dongle *second;
+	t_dongle	*first;
+	t_dongle	*second;
 
 	if (coder->left_dongle->dongle_id < coder->right_dongle->dongle_id)
 	{
@@ -221,7 +218,7 @@ int	grab_dongles(t_coder *coder)
 	return (1);
 }
 
-void release_single_dongle(t_coder *coder, t_dongle *dongle)
+void	release_single_dongle(t_coder *coder, t_dongle *dongle)
 {
 	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	dongle->current_user = -1;

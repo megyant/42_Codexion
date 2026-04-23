@@ -6,12 +6,11 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 16:35:15 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/20 16:11:25 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 19:13:09 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
-
 
 long	get_current_time(void)
 {
