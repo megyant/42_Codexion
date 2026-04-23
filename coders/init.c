@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 21:02:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/21 11:45:51 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 19:00:53 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,17 @@ t_workspace	*init_workspace(t_args *config)
 	workspace->dongles = calloc(config->number_coders, sizeof(t_dongle));
 	if (!workspace->coders || !workspace->dongles)
 		return (free_workspace(workspace));
-	workspace->running = true;
+	workspace->running = false;
 	pthread_mutex_init(&workspace->stop_lock, NULL);
 	pthread_mutex_init(&workspace->print_lock, NULL);
 	if (init_dongles(workspace) != 0)
 		return (free_workspace(workspace));
 	if (init_coders(workspace) != 0)
 		return (free_workspace(workspace));
-	workspace->start_simulation = 0;// start only after all background processes are done
+	workspace->start_simulation = get_current_time();
+	safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
+	workspace->running = true;
+	safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
 	return (workspace);
 }
 
@@ -61,7 +64,7 @@ int	init_queue(t_priority_queue *queue, t_args *config)
 {
 	if (!queue || !config)
 		return (1);
-	queue->heap = malloc(sizeof(t_request) * config->number_coders);
+	queue->heap = malloc(sizeof(t_request) * (config->number_coders + 1));
 	if (!queue->heap)
 		return (1);
 	queue->size = 0;
@@ -86,12 +89,21 @@ int	init_coders(t_workspace *workspace)
 		workspace->coders[i].left_dongle = &workspace->dongles[i];
 		workspace->coders[i].right_dongle = &workspace->dongles[(i + 1) % max]; // Equivalent of doing i + 1 and if i == max dongle = 0
 		safe_mutex_handle(&workspace->coders[i].state_lock, INIT, workspace);
+		safe_thread_handle(&workspace->coders[i].thread_id, coder_routine,
+			&workspace->coders[i], CREATE);
 	}
+	
+	return (0);
+}
+
+int init_threads(t_workspace *workspace, int max)
+{
+	int i;
+
 	i = -1;
 	while (++i < max)
 	{
-		safe_thread_handle(&workspace->coders[i].thread_id, coder_routine,
-			&workspace->coders[i], CREATE);
+		
 		if (workspace->running == false)
 			return (1);
 	}

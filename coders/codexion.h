@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/21 16:42:51 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 18:56:13 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ t_workspace					*init_workspace(t_args *config);
 int							init_dongles(t_workspace *workspace);
 int							init_queue(t_priority_queue *queue, t_args *config);
 int							init_coders(t_workspace *workspace);
+int 						init_threads(t_workspace *workspace, int max);
 
 // Part of the simulator
 void						*coder_routine(void *arg);
@@ -117,6 +118,15 @@ void						print_message(char *message, t_coder *coder,
 								int id);
 int							get_sim_status(t_workspace *workspace);
 int							grab_dongles(t_coder *coder);
+void						release_dongles(t_coder *coder);
+int							request_dongle(t_coder *coder, t_dongle *dongle);
+void						remove_heap(t_dongle *dongle, int i);
+void						bubble_down(t_dongle *dongle, int i);
+int							heap_peek(t_dongle *dongle);
+void 						queue_management(t_coder *coder, t_dongle *dongle);
+void 						bubble_up(t_dongle *dongle, int i);
+void						insert_heap(t_dongle *dongle, int id, long priority_number);
+void 						release_single_dongle(t_coder *coder, t_dongle *dongle);
 void						release_dongles(t_coder *coder);
 
 // Time

@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 11:46:14 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/21 21:55:21 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/23 18:48:58 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,27 +81,73 @@ int	get_sim_status(t_workspace *workspace)
 
 int	request_dongle(t_coder *coder, t_dongle *dongle)
 {
+	int i;
+
 	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	queue_management(coder, dongle);
-	while (get_sim_status(coder->workspace) 
-		&& check_top_queue(dongle) != coder->coder_id)
+	while (get_sim_status(coder->workspace) && (heap_peek(dongle) != coder->id
+	|| dongle->current_user != -1))
 		pthread_cond_wait(&dongle->cond, &dongle->mutex);
 	if (!get_sim_status(coder->workspace))
 	{
-		remove_heap(dongle->coder_id); // to do
+		i = -1;
+		while (++i < dongle->queue.size)
+			if(dongle->queue.heap[i].coder_id == coder->id)
+				break;
+		remove_heap(dongle, i);
+		pthread_cond_broadcast(&dongle->cond);
 		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 		return (0);
 	}
+	dongle->current_user = coder->id;
 	safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 	return (1);
 }
 
-void	remove_heap(int id)
+void	remove_heap(t_dongle *dongle, int i)
 {
-	
+	if (dongle->queue.size == 0 || i < 0
+	|| i >= dongle->queue.size)
+		return ;
+	dongle->queue.size--;
+	if (i < dongle->queue.size)
+	{
+		dongle->queue.heap[i] = dongle->queue.heap[dongle->queue.size];
+		bubble_down(dongle, i);
+		bubble_up(dongle, i);
+	}
 }
 
-int	check_top_queue(t_dongle *dongle)
+void	bubble_down(t_dongle *dongle, int i)
+{
+	int left;
+	int right;
+	int smallest;
+	t_request temp;
+	
+	while (1)
+	{
+		left = 2 * i + 1;
+		right = 2 * i + 2;
+		smallest = i;
+		if (left < dongle->queue.size &&
+		(dongle->queue.heap[left].priority_value <
+		dongle->queue.heap[smallest].priority_value))
+			smallest = left;
+		if (right < dongle->queue.size &&
+		(dongle->queue.heap[right].priority_value <
+		dongle->queue.heap[smallest].priority_value))
+			smallest = right;
+		if (smallest == i)
+			break ;
+		temp = dongle->queue.heap[i];
+		dongle->queue.heap[i] = dongle->queue.heap[smallest];
+		dongle->queue.heap[smallest] = temp;
+		i = smallest;
+	}
+}
+
+int	heap_peek(t_dongle *dongle)
 {
 	if (dongle->queue.size == 0)
 		return (-1);
@@ -119,22 +165,16 @@ void queue_management(t_coder *coder, t_dongle *dongle)
 	insert_heap(dongle, coder->id, priority);
 }
 
-void	insert_heap(t_dongle *dongle, int id, long priority_number)
+void bubble_up(t_dongle *dongle, int i)
 {
-	int i;
+	int parent_thread;
 	t_request temp;
-	int parent_thread; // think of a tree, parent is halfway between children
-
-	i = dongle->queue.size;
-	dongle->queue.heap[i].coder_id = id;
-	dongle->queue.heap[i].priotity_value = priority_number;
-	dongle->queue.size++;
 
 	while (i > 0)
 	{
 		parent_thread = (i - 1) / 2;
-		if (dongle->queue.heap[i].priotity_value >=
-			dongle->queue.heap[parent_thread].priotity_value)
+		if (dongle->queue.heap[i].priority_value >=
+			dongle->queue.heap[parent_thread].priority_value)
 			break ;
 		temp = dongle->queue.heap[i];
 		dongle->queue.heap[i] = dongle->queue.heap[parent_thread];
@@ -143,13 +183,55 @@ void	insert_heap(t_dongle *dongle, int id, long priority_number)
 	}
 }
 
+void	insert_heap(t_dongle *dongle, int id, long priority_number)
+{
+	int i;
+
+	if (dongle->queue.size >= dongle->queue.capacity)
+		return ;
+	i = dongle->queue.size;
+	dongle->queue.heap[i].coder_id = id;
+	dongle->queue.heap[i].priority_value = priority_number;
+	dongle->queue.size++;
+	bubble_up(dongle, i);
+}
+
 int	grab_dongles(t_coder *coder)
 {
-	request_dongle(coder, coder->right_dongle);
-	request_dongle(coder, coder->left_dongle);
-	return 0;
+	t_dongle *first;
+	t_dongle *second;
+
+	if (coder->left_dongle->dongle_id < coder->right_dongle->dongle_id)
+	{
+		first = coder->left_dongle;
+		second = coder->right_dongle;
+	}
+	else
+	{
+		first = coder->right_dongle;
+		second = coder->left_dongle;
+	}
+	if (!request_dongle(coder, first))
+		return (0);
+	if (!request_dongle(coder, second))
+	{
+		release_single_dongle(coder, first);
+		return (0);
+	}
+	return (1);
+}
+
+void release_single_dongle(t_coder *coder, t_dongle *dongle)
+{
+	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
+	dongle->current_user = -1;
+	remove_heap(dongle, 0);
+	pthread_cond_broadcast(&dongle->cond);
+	safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 }
 
 void	release_dongles(t_coder *coder)
 {
+	release_single_dongle(coder, coder->right_dongle);
+	release_single_dongle(coder, coder->left_dongle);
 }
