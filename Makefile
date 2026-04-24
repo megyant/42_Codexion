@@ -6,7 +6,7 @@
 #    By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 15:50:00 by mbotelho          #+#    #+#              #
-#    Updated: 2026/04/16 11:12:18 by mbotelho         ###   ########.fr        #
+#    Updated: 2026/04/23 19:24:42 by mbotelho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ SRCS = $(FOLDER)/codexion.c \
 	   $(FOLDER)/memory_free.c \
 	   $(FOLDER)/simulation.c \
 	   $(FOLDER)/handle_mutex_thread.c \
-	   $(FOLDER)/gettime.c
+	   $(FOLDER)/gettime.c \
+	   $(FOLDER)/monitor.c
 
 OBJS = $(SRCS:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 21:02:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 19:18:18 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/24 11:09:41 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,6 @@ t_workspace	*init_workspace(t_args *config)
 		return (free_workspace(workspace));
 	if (init_coders(workspace) != 0)
 		return (free_workspace(workspace));
-	workspace->start_simulation = get_current_time();
-	safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
-	workspace->running = true;
-	safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
 	return (workspace);
 }
 
@@ -83,7 +79,7 @@ int	init_coders(t_workspace *workspace)
 	{
 		workspace->coders[i].id = i + 1;
 		workspace->coders[i].compile_count = 0;
-		workspace->coders[i].last_compile_time = 0;
+		workspace->coders[i].last_compile_time = get_current_time();
 		workspace->coders[i].finished_compiling = false;
 		workspace->coders[i].workspace = workspace;
 		workspace->coders[i].left_dongle = &workspace->dongles[i];

@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 16:35:15 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 19:13:09 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/24 11:39:44 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,11 @@ int	ft_usleep(long miliseconds, t_workspace *workspace)
 	size_t	start;
 
 	start = get_current_time();
-	while ((get_current_time() - start) < miliseconds)
+	while ((get_current_time() - start) < (size_t)miliseconds)
 	{
-		safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
-		if (!workspace->running)
-		{
-			safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
+		if (!get_sim_status(workspace))
 			break ;
-		}
-		safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
-		usleep(500);
+		usleep(100);
 	}
 	return (0);
 }

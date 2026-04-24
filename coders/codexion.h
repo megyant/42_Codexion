@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:45 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 19:16:07 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/24 11:47:53 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,7 @@ void						compile(t_coder *coder);
 void						debug(t_coder *coder);
 void						refactor(t_coder *coder);
 void						wait_threads(t_workspace *workspace);
-void						print_message(char *message, t_coder *coder,
-								int id);
+void						print_message(char *message, t_coder *coder);
 int							get_sim_status(t_workspace *workspace);
 int							grab_dongles(t_coder *coder);
 void						release_dongles(t_coder *coder);
@@ -130,6 +129,16 @@ void						insert_heap(t_dongle *dongle, int id,
 void						release_single_dongle(t_coder *coder,
 								t_dongle *dongle);
 void						release_dongles(t_coder *coder);
+int							try_request_dongle(t_coder *coder, t_dongle *dongle);
+void 						assign_dongles(t_coder *coder, t_dongle **first, t_dongle **second);
+
+
+// monitor
+void    					*monitor(t_workspace *workspace);
+int							burnout(t_workspace *workspace);
+void						stop_simulation(t_workspace *workspace);
+int							coders_finished(t_workspace *workspace);
+
 
 // Time
 long						get_current_time(void);
