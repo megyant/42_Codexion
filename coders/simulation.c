@@ -80,5 +80,4 @@ void	release_dongles(t_coder *coder)
 	
 	assign_dongles(coder, &first, &second);
 	release_single_dongle(coder, second);
-	release_single_dongle(coder, first);
 }

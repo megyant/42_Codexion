@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 11:19:24 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/27 19:57:55 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/27 20:06:59 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,9 @@ void request_dongle(t_coder *coder, t_dongle *dongle)
 		if (heap_peek(dongle->queue, dongle->queue_size).coder_id == 
 		request.coder_id && !dongle->in_use)
 			break;
-		pthread_cond_wait(&dongle->cond, &dongle->mutex);
+		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
+		ft_usleep(1, coder->workspace);
+		safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	}
 	if (!simulation_finished(coder->workspace))
 	{

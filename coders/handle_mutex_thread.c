@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 10:38:25 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/27 19:09:02 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/27 20:01:57 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	handle_mutex_error(int status, t_opcode opcode, t_workspace *workspace)
 			"another mutex.\n");
 	else if (EBUSY == status)
 		fprintf(stderr, "Mutex is locked.\n");
-	if (workspace)
+	/*if (workspace)
 	{
 		pthread_mutex_lock(&workspace->stop_lock);
 		workspace->simulation_finished = true;
 		pthread_mutex_unlock(&workspace->stop_lock);
-	}
+	}*/
 }
 
 void	safe_mutex_handle(pthread_mutex_t *mutex, t_opcode opcode,
