@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 10:38:25 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 19:16:53 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/27 19:09:02 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	handle_mutex_error(int status, t_opcode opcode, t_workspace *workspace)
 	if (workspace)
 	{
 		pthread_mutex_lock(&workspace->stop_lock);
-		workspace->running = false;
+		workspace->simulation_finished = true;
 		pthread_mutex_unlock(&workspace->stop_lock);
 	}
 }
@@ -74,7 +74,7 @@ void	handle_thread_error(int status, t_opcode opcode, t_workspace *workspace)
 	if (workspace)
 	{
 		pthread_mutex_lock(&workspace->stop_lock);
-		workspace->running = false;
+		workspace->simulation_finished = true;
 		pthread_mutex_unlock(&workspace->stop_lock);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/20 16:06:19 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/27 17:23:24 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void	*free_workspace_dongles(t_workspace *workspace)
 		i = -1;
 		while (++i < workspace->config->number_coders)
 		{
-			if (workspace->dongles[i].queue.heap)
-				ft_free(workspace->dongles[i].queue.heap);
 			pthread_mutex_destroy(&workspace->dongles[i].mutex);
 			pthread_cond_destroy(&workspace->dongles[i].cond);
 		}
