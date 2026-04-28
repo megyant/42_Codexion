@@ -24,6 +24,7 @@ int	main(int ac, char **av)
 	if (!workspace)
 		return (ft_free(config), 1);
 	start_simulation(workspace);
+	free_workspace(workspace);
 	free(config);
 	return (0);
 }
