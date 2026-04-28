@@ -50,18 +50,18 @@ typedef struct s_args
 
 typedef struct s_request // The information put in the "Sign-in Sheet"
 {
-	int		coder_id;
-	long	priority_value;
-	long	ticket;
+	int						coder_id;
+	long					priority_value;
+	long					ticket;
 }							t_request;
 
 typedef struct s_dongle
 {
 	int						dongle_id;
-	pthread_mutex_t			mutex; // protect "Sign-in Sheet" for one dongle
-	pthread_cond_t			cond;   // waiting room
+	pthread_mutex_t			mutex;
+	pthread_cond_t			cond;
 	long					last_dongle_usage;
-	int						current_user; // if -1 dongle is free
+	int						current_user;
 	t_request				queue[2];
 	int						queue_size;
 	int						seq_counter;
@@ -76,9 +76,8 @@ typedef struct s_coder
 	long					last_compile_time;
 	bool					finished_compiling;
 	pthread_mutex_t			state_lock;
-	// protect stop lock and last compile time so that we dont have 200 coders checking stop lock at the same time
-	t_dongle				*left_dongle;
 	t_dongle				*right_dongle;
+	t_dongle				*left_dongle;
 	t_workspace				*workspace;
 }							t_coder;
 
@@ -91,8 +90,8 @@ typedef struct s_workspace
 	bool					simulation_finished;
 	bool					all_threads_ready;
 	pthread_t				monitor_thread;
-	pthread_mutex_t			stop_lock;  // protect simulation status
-	pthread_mutex_t			print_lock; // protect terminal output
+	pthread_mutex_t			stop_lock;
+	pthread_mutex_t			print_lock;
 }							t_workspace;
 
 // Reading the input
@@ -114,22 +113,22 @@ void						print_message(char *message, t_coder *coder);
 void						grab_dongles(t_coder *coder);
 void						release_dongles(t_coder *coder);
 void						request_dongle(t_coder *coder, t_dongle *dongle);
-t_request	remove_heap(t_request *heap, int *size);
+t_request					remove_heap(t_request *heap, int *size);
 t_request					heap_peek(t_request *heap, int size);
-t_request	queue_management(t_coder *coder, t_dongle *dongle,
-	long last_compile);
+t_request					queue_management(t_coder *coder, t_dongle *dongle,
+								long last_compile);
 void						release_single_dongle(t_coder *coder,
 								t_dongle *dongle);
 void						release_dongles(t_coder *coder);
-void 						assign_dongles(t_coder *coder, t_dongle **first, t_dongle **second);
-void	*coder_routine(t_coder *coder);
+void						assign_dongles(t_coder *coder, t_dongle **first,
+								t_dongle **second);
+void						*coder_routine(t_coder *coder);
 
 // monitor
-void    					*monitor(t_workspace *workspace);
+void						*monitor(t_workspace *workspace);
 int							burnout(t_workspace *workspace);
 void						stop_simulation(t_workspace *workspace);
 int							coders_finished(t_workspace *workspace);
-
 
 // Time
 long						get_current_time(void);
@@ -163,19 +162,20 @@ void						*ft_calloc(size_t nmemb, size_t size);
 
 // get_set.c
 
-void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
-bool	get_bool(pthread_mutex_t *mutex, bool *value);
-void	set_long(pthread_mutex_t *mutex, long *dest, long value);
-long	get_long(pthread_mutex_t *mutex, long *value);
-bool	simulation_running(t_workspace *workspace);
-bool	simulation_finished(t_workspace *workspace);
+void						set_bool(pthread_mutex_t *mutex, bool *dest,
+								bool value);
+bool						get_bool(pthread_mutex_t *mutex, bool *value);
+void						set_long(pthread_mutex_t *mutex, long *dest,
+								long value);
+long						get_long(pthread_mutex_t *mutex, long *value);
+bool						simulation_running(t_workspace *workspace);
+bool						simulation_finished(t_workspace *workspace);
 
-
-//new sim
-int	prioritary_queue(t_request new, t_request old);
-void	start_simulation(t_workspace *workspace);
-void	wait_cooldown(t_coder *coder);
-void	*codexion_simulator(void *data);
-void heap_push(t_dongle *dongle, t_request request);
+// new sim
+int							prioritary_queue(t_request new, t_request old);
+void						start_simulation(t_workspace *workspace);
+void						wait_cooldown(t_coder *coder);
+void						*codexion_simulator(void *data);
+void						heap_push(t_dongle *dongle, t_request request);
 
 #endif

@@ -30,15 +30,16 @@ void	*coder_routine(t_coder *coder)
 
 void	start_simulation(t_workspace *workspace)
 {
-	int i;
+	int	i;
 
 	if (workspace->config->total_compiles == 0)
 		return ;
 	i = -1;
 	while (++i < workspace->config->number_coders)
-		safe_thread_handle(&workspace->coders[i].thread_id,
-			codexion_simulator, &workspace->coders[i], CREATE);
-	safe_thread_handle(&workspace->monitor_thread, (void *(*)(void *))monitor, workspace, CREATE);
+		safe_thread_handle(&workspace->coders[i].thread_id, codexion_simulator,
+			&workspace->coders[i], CREATE);
+	safe_thread_handle(&workspace->monitor_thread, (void *(*)(void *))monitor,
+		workspace, CREATE);
 	workspace->start_simulation = get_current_time();
 	set_bool(&workspace->stop_lock, &workspace->all_threads_ready, true);
 	i = -1;
@@ -60,37 +61,37 @@ void	grab_dongles(t_coder *coder)
 	wait_cooldown(coder);
 }
 
-void assign_dongles(t_coder *coder, t_dongle **first, t_dongle **second)
+void	assign_dongles(t_coder *coder, t_dongle **first, t_dongle **second)
 {
-    if (coder->left_dongle->dongle_id < coder->right_dongle->dongle_id)
-    {
-        *first = coder->left_dongle;
-        *second = coder->right_dongle;
-    }
-    else
-    {
-        *first = coder->right_dongle;
-        *second = coder->left_dongle;
-    }
+	if (coder->left_dongle->dongle_id < coder->right_dongle->dongle_id)
+	{
+		*first = coder->left_dongle;
+		*second = coder->right_dongle;
+	}
+	else
+	{
+		*first = coder->right_dongle;
+		*second = coder->left_dongle;
+	}
 }
 
-void request_dongle(t_coder *coder, t_dongle *dongle)
+void	request_dongle(t_coder *coder, t_dongle *dongle)
 {
 	t_request	request;
 	long		last_compile;
 
-	last_compile = get_long(&coder->state_lock, 
-		&coder->last_compile_time);
+	last_compile = get_long(&coder->state_lock, &coder->last_compile_time);
 	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	request = queue_management(coder, dongle, last_compile);
 	heap_push(dongle, request);
 	while (1)
 	{
-		if (heap_peek(dongle->queue, dongle->queue_size).coder_id == 
-		request.coder_id && !dongle->in_use)
+		if (heap_peek(dongle->queue,
+				dongle->queue_size).coder_id == request.coder_id
+			&& !dongle->in_use)
 		{
 			dongle->in_use = true;
-			break;
+			break ;
 		}
 		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 		if (simulation_finished(coder->workspace))
@@ -108,21 +109,21 @@ void request_dongle(t_coder *coder, t_dongle *dongle)
 }
 
 t_request	queue_management(t_coder *coder, t_dongle *dongle,
-	long last_compile)
+		long last_compile)
 {
 	t_request	request;
 
 	request.coder_id = coder->id;
 	request.ticket = dongle->seq_counter++;
 	if (coder->workspace->config->scheduler == 1)
-		request.priority_value = last_compile + 
-		coder->workspace->config->time_burnout;
+		request.priority_value = last_compile
+			+ coder->workspace->config->time_burnout;
 	else
-		request.priority_value= 0;
+		request.priority_value = 0;
 	return (request);
 }
 
-void heap_push(t_dongle *dongle, t_request request)
+void	heap_push(t_dongle *dongle, t_request request)
 {
 	t_request	temp;
 
@@ -141,7 +142,7 @@ void heap_push(t_dongle *dongle, t_request request)
 	}
 }
 
-int prioritary_queue(t_request new, t_request old)
+int	prioritary_queue(t_request new, t_request old)
 {
 	if (new.priority_value < old.priority_value)
 		return (1);
@@ -156,13 +157,13 @@ void	wait_cooldown(t_coder *coder)
 	long	last_used;
 	long	right_used;
 	long	time_elapsed;
-	
+
 	cool_time = coder->workspace->config->dongle_cooldown;
 	if (cool_time <= 0)
 		return ;
 	last_used = coder->left_dongle->last_dongle_usage;
-	right_used = get_long(&coder->right_dongle->mutex, 
-		&coder->right_dongle->last_dongle_usage);
+	right_used = get_long(&coder->right_dongle->mutex,
+			&coder->right_dongle->last_dongle_usage);
 	if (right_used > last_used)
 		last_used = right_used;
 	time_elapsed = get_current_time() - last_used;
@@ -180,7 +181,7 @@ void	*codexion_simulator(void *data)
 		ft_usleep(1, coder->workspace);
 	if (coder->left_dongle == coder->right_dongle)
 	{
-		while(!simulation_finished(coder->workspace))
+		while (!simulation_finished(coder->workspace))
 			ft_usleep(1, coder->workspace);
 		return (NULL);
 	}

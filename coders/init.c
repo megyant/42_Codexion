@@ -46,7 +46,7 @@ int	init_dongles(t_workspace *workspace)
 	i = -1;
 	while (++i < workspace->config->number_coders)
 	{
-		memset(&workspace->dongles[i], 0,sizeof(t_dongle));
+		memset(&workspace->dongles[i], 0, sizeof(t_dongle));
 		workspace->dongles[i].dongle_id = i + 1;
 		workspace->dongles[i].current_user = -1;
 		workspace->dongles[i].in_use = false;

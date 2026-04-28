@@ -18,8 +18,8 @@ void	compile(t_coder *coder)
 	safe_mutex_handle(&coder->state_lock, LOCK, coder->workspace);
 	coder->last_compile_time = get_current_time();
 	coder->compile_count++;
-	if (coder->workspace->config->total_compiles != -1 &&
-        coder->compile_count >= coder->workspace->config->total_compiles)
+	if (coder->workspace->config->total_compiles != -1
+		&& coder->compile_count >= coder->workspace->config->total_compiles)
 		coder->finished_compiling = true;
 	safe_mutex_handle(&coder->state_lock, UNLOCK, coder->workspace);
 	print_message("is compiling", coder);
@@ -79,7 +79,7 @@ void	release_dongles(t_coder *coder)
 {
 	t_dongle	*first;
 	t_dongle	*second;
-	
+
 	assign_dongles(coder, &first, &second);
 	release_single_dongle(coder, first);
 	release_single_dongle(coder, second);

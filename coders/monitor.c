@@ -39,15 +39,14 @@ int	burnout(t_workspace *workspace)
 	now = get_current_time();
 	while (++i < workspace->config->number_coders)
 	{
-		last_compile = get_long(&workspace->coders[i].state_lock, 
-                                &workspace->coders[i].last_compile_time);
+		last_compile = get_long(&workspace->coders[i].state_lock,
+				&workspace->coders[i].last_compile_time);
 		if (now - last_compile > workspace->config->time_burnout)
 		{
 			stop_simulation(workspace);
 			safe_mutex_handle(&workspace->print_lock, LOCK, workspace);
-			printf("%ld %d burned out\n", (now
-				- workspace->start_simulation),
-			workspace->coders[i].id);
+			printf("%ld %d burned out\n", (now - workspace->start_simulation),
+				workspace->coders[i].id);
 			safe_mutex_handle(&workspace->print_lock, UNLOCK, workspace);
 			return (1);
 		}
@@ -64,8 +63,8 @@ int	coders_finished(t_workspace *workspace)
 	i = -1;
 	while (++i < workspace->config->number_coders)
 	{
-		if (!get_bool(&workspace->coders[i].state_lock, 
-                      &workspace->coders[i].finished_compiling))
+		if (!get_bool(&workspace->coders[i].state_lock,
+				&workspace->coders[i].finished_compiling))
 			return (0);
 	}
 	return (1);
@@ -73,11 +72,11 @@ int	coders_finished(t_workspace *workspace)
 
 void	stop_simulation(t_workspace *workspace)
 {
-	int i;
-	
+	int	i;
+
 	safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
 	workspace->simulation_finished = true;
-    safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
+	safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
 	if (simulation_finished(workspace))
 	{
 		safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
@@ -89,7 +88,7 @@ void	stop_simulation(t_workspace *workspace)
 	while (++i < workspace->config->number_coders)
 	{
 		pthread_mutex_lock(&workspace->dongles[i].mutex);
-        pthread_cond_broadcast(&workspace->dongles[i].cond);
-        pthread_mutex_unlock(&workspace->dongles[i].mutex);
-	}	
+		pthread_cond_broadcast(&workspace->dongles[i].cond);
+		pthread_mutex_unlock(&workspace->dongles[i].mutex);
+	}
 }

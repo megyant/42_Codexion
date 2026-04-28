@@ -17,7 +17,7 @@ long	get_current_time(void)
 	struct timeval	time;
 
 	if (gettimeofday(&time, NULL) == -1)
-		return(fprintf(stderr, "ERROR: gettimeofday() failed.\n"), -1);
+		return (fprintf(stderr, "ERROR: gettimeofday() failed.\n"), -1);
 	return ((time.tv_sec * 1000L) + (time.tv_usec / 1000L));
 }
 
@@ -37,8 +37,8 @@ int	ft_usleep(long miliseconds, t_workspace *workspace)
 
 void	ft_sleep_ms(long ms)
 {
-	struct timespec ts;
-	
+	struct timespec	ts;
+
 	ts.tv_sec = ms / 1000;
 	ts.tv_nsec = (ms % 1000) * 1e6;
 	nanosleep(&ts, NULL);
