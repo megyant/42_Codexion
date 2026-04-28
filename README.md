@@ -1,5 +1,5 @@
 # 42_Codexion
-Solving the dining philosopher's problem
+Missing: move the functions
 
 Dining philosophers:
 - https://www.youtube.com/watch?v=zOpzGHwJ3MU
