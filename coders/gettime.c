@@ -24,21 +24,13 @@ long	get_current_time(void)
 int	ft_usleep(long miliseconds, t_workspace *workspace)
 {
 	long	start;
-	long	elapsed;
-	long	remaining;
 
 	start = get_current_time();
 	while ((get_current_time() - start) < miliseconds)
 	{
 		if (simulation_finished(workspace))
 			break ;
-		elapsed = get_current_time() - start;
-		remaining = miliseconds - elapsed;
-
-		if (remaining > 10)
-			ft_sleep_ms(5);
-		else
-			ft_sleep_ms(1);
+		usleep(500);
 	}
 	return (0);
 }

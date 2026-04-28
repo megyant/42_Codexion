@@ -58,7 +58,6 @@ int	burnout(t_workspace *workspace)
 int	coders_finished(t_workspace *workspace)
 {
 	int	i;
-	int	finished;
 
 	if (workspace->config->total_compiles == -1)
 		return (0);
@@ -77,6 +76,8 @@ void	stop_simulation(t_workspace *workspace)
 	int i;
 	
 	safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
+	workspace->simulation_finished = true;
+    safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
 	if (simulation_finished(workspace))
 	{
 		safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);

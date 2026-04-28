@@ -43,7 +43,6 @@ long	ft_atol(const char *nptr)
 int	ft_atoi(const char *nptr)
 {
 	int		i;
-	int		pn;
 	long	number;
 
 	i = 0;

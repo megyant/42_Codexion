@@ -65,6 +65,8 @@ t_request	heap_peek(t_request *heap, int size)
 
 void	release_single_dongle(t_coder *coder, t_dongle *dongle)
 {
+	if (dongle->current_user != coder->id)
+		return ;
 	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	dongle->last_dongle_usage = get_current_time();
 	dongle->in_use = false;
@@ -79,5 +81,6 @@ void	release_dongles(t_coder *coder)
 	t_dongle	*second;
 	
 	assign_dongles(coder, &first, &second);
+	release_single_dongle(coder, first);
 	release_single_dongle(coder, second);
 }

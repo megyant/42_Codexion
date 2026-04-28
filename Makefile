@@ -12,7 +12,7 @@
 
 NAME = codexion
 CC = cc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -g
 
 FOLDER = coders
 
@@ -31,6 +31,9 @@ SRCS = $(FOLDER)/codexion.c \
 	   $(FOLDER)/synchro_utils.c
 
 OBJS = $(SRCS:.c=.o)
+
+%.o: %.c
+	$(CC) $(FLAGS) -c $< -o $@
 
 all_clean: all clean
 

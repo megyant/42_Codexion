@@ -100,7 +100,7 @@ t_args						*parsing(int ac, char **av);
 int							check_input(char *arg);
 
 // Initialize structures
-t_args						*init_args(int ac, char **av);
+t_args						*init_args(char **av);
 t_workspace					*init_workspace(t_args *config);
 int							init_dongles(t_workspace *workspace);
 int							init_coders(t_workspace *workspace);
@@ -116,7 +116,8 @@ void						release_dongles(t_coder *coder);
 void						request_dongle(t_coder *coder, t_dongle *dongle);
 t_request	remove_heap(t_request *heap, int *size);
 t_request					heap_peek(t_request *heap, int size);
-t_request	queue_management(t_coder *coder, t_dongle *dongle);
+t_request	queue_management(t_coder *coder, t_dongle *dongle,
+	long last_compile);
 void						release_single_dongle(t_coder *coder,
 								t_dongle *dongle);
 void						release_dongles(t_coder *coder);

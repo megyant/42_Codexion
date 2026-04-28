@@ -74,6 +74,7 @@ int	init_coders(t_workspace *workspace)
 		workspace->coders[i].left_dongle = &workspace->dongles[(i + 1) % max];
 		workspace->coders[i].right_dongle = &workspace->dongles[i];
 		workspace->coders[i].workspace = workspace;
+		workspace->coders[i].last_compile_time = get_current_time();
 		safe_mutex_handle(&workspace->coders[i].state_lock, INIT, workspace);
 	}
 	return (0);

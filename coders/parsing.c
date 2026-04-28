@@ -33,7 +33,7 @@ t_args	*parsing(int ac, char **av)
 		fprintf(stderr, "Error: Scheduler must be fifo or edf\n");
 		return (NULL);
 	}
-	return (init_args(ac, av));
+	return (init_args(av));
 }
 
 t_args	*input_error(int ac)
@@ -68,7 +68,7 @@ int	check_input(char *arg)
 	return (1);
 }
 
-t_args	*init_args(int ac, char **av)
+t_args	*init_args(char **av)
 {
 	t_args	*config;
 
@@ -99,7 +99,7 @@ t_args	*check_final_args(t_args *config)
 	if (config->time_compile < 0 || config->time_debug < 0
 		|| config->time_refactor < 0 || config->total_compiles < 0
 		|| config->dongle_cooldown < 0 || (config->scheduler != 1
-			&& config->scheduler != 0 || config->number_coders < 1))
+			&& config->scheduler != 0) || config->number_coders < 1)
 	{
 		fprintf(stderr, "Error: Arguments must be positive integers.\n");
 		return (ft_free(config));
