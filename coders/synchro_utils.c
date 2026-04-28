@@ -15,5 +15,5 @@
 void	wait_threads(t_workspace *workspace)
 {
 	while (!get_bool(&workspace->stop_lock, &workspace->all_threads_ready))
-		;
+		usleep(100);
 }

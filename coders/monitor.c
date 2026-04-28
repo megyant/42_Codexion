@@ -21,7 +21,9 @@ void	*monitor(t_workspace *workspace)
 			return (NULL);
 		if (coders_finished(workspace))
 		{
+			safe_mutex_handle(&workspace->print_lock, LOCK, workspace);
 			printf("All finished!\n");
+			safe_mutex_handle(&workspace->print_lock, UNLOCK, workspace);
 			return (stop_simulation(workspace), NULL);
 		}
 		ft_usleep(1, workspace);
@@ -75,13 +77,6 @@ void	stop_simulation(t_workspace *workspace)
 	int	i;
 
 	safe_mutex_handle(&workspace->stop_lock, LOCK, workspace);
-	workspace->simulation_finished = true;
-	safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
-	if (simulation_finished(workspace))
-	{
-		safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
-		return ;
-	}
 	workspace->simulation_finished = true;
 	safe_mutex_handle(&workspace->stop_lock, UNLOCK, workspace);
 	i = -1;
