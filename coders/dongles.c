@@ -45,21 +45,20 @@ void	request_dongle(t_coder *coder, t_dongle *dongle)
 	safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 }
 
-void	request_dongle_util(t_coder *coder, t_dongle *dongle,
-		t_request request)
+void	request_dongle_util(t_coder *coder, t_dongle *dongle, t_request request)
 {
 	while (1)
 	{
 		if (heap_peek(dongle->queue,
 				dongle->queue_size).coder_id == request.coder_id
 			&& !dongle->in_use)
-		{
-			dongle->in_use = true;
 			break ;
-		}
 		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 		if (simulation_finished(coder->workspace))
+		{
+			safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 			break ;
+		}
 		ft_usleep(1, coder->workspace);
 		safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
 	}
