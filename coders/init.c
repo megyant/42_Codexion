@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 21:02:04 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/30 08:55:26 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/30 09:40:01 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_args	*check_final_args(t_args *config)
 		return (ft_free(config));
 	}
 	if (config->number_coders < 2)
-		fprintf(stderr, "Warning: Simulation is doomed whith 1 coder\n");
+		fprintf(stderr, "Warning: Simulation is doomed with 1 coder\n");
 	if (config->time_compile > config->time_burnout)
 	{
 		fprintf(stderr,
