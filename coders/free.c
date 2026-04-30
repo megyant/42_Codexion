@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_free.c                                      :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 22:21:22 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/27 17:23:24 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/30 09:01:17 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,18 @@ void	*ft_free(void *ptr)
 	if (!ptr)
 		return (NULL);
 	free(ptr);
+	return (NULL);
+}
+
+void	*free_workspace(t_workspace *workspace)
+{
+	if (!workspace)
+		return (NULL);
+	free_workspace_dongles(workspace);
+	free_workspace_coders(workspace);
+	pthread_mutex_destroy(&workspace->stop_lock);
+	pthread_mutex_destroy(&workspace->print_lock);
+	ft_free(workspace);
 	return (NULL);
 }
 
@@ -51,17 +63,5 @@ void	*free_workspace_coders(t_workspace *workspace)
 		}
 		ft_free(workspace->coders);
 	}
-	return (NULL);
-}
-
-void	*free_workspace(t_workspace *workspace)
-{
-	if (!workspace)
-		return (NULL);
-	free_workspace_dongles(workspace);
-	free_workspace_coders(workspace);
-	pthread_mutex_destroy(&workspace->stop_lock);
-	pthread_mutex_destroy(&workspace->print_lock);
-	ft_free(workspace);
 	return (NULL);
 }

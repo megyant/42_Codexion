@@ -5,85 +5,67 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/09 11:46:14 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/27 19:44:04 by mbotelho         ###   ########.fr       */
+/*   Created: 2026/04/27 11:19:24 by mbotelho          #+#    #+#             */
+/*   Updated: 2026/04/30 09:18:07 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-void	compile(t_coder *coder)
+void	*codexion_simulator(void *data)
 {
-	wait_cooldown(coder);
-	safe_mutex_handle(&coder->state_lock, LOCK, coder->workspace);
-	coder->last_compile_time = get_current_time();
-	coder->compile_count++;
-	if (coder->workspace->config->total_compiles != -1
-		&& coder->compile_count >= coder->workspace->config->total_compiles)
-		coder->finished_compiling = true;
-	safe_mutex_handle(&coder->state_lock, UNLOCK, coder->workspace);
-	print_message("is compiling", coder);
-	ft_usleep(coder->workspace->config->time_compile, coder->workspace);
-}
+	t_coder	*coder;
 
-void	debug(t_coder *coder)
-{
-	print_message("is debugging", coder);
-	ft_usleep(coder->workspace->config->time_debug, coder->workspace);
-}
-
-void	refactor(t_coder *coder)
-{
-	print_message("is refactoring", coder);
-	ft_usleep(coder->workspace->config->time_refactor, coder->workspace);
-}
-
-t_request	remove_heap(t_request *heap, int *size)
-{
-	t_request	top;
-
-	top = heap[0];
-	(*size)--;
-	if (*size == 1)
-		heap[0] = heap[1];
-	return (top);
-}
-
-t_request	heap_peek(t_request *heap, int size)
-{
-	t_request	empty;
-
-	if (size == 0)
+	coder = (t_coder *)data;
+	wait_threads(coder->workspace);
+	if (coder->id % 2 == 0)
+		ft_usleep(1, coder->workspace);
+	if (coder->left_dongle == coder->right_dongle)
 	{
-		empty.coder_id = -1;
-		empty.priority_value = 0;
-		empty.ticket = 0;
-		return (empty);
+		while (!simulation_finished(coder->workspace))
+			ft_usleep(1, coder->workspace);
+		return (NULL);
 	}
-	return (heap[0]);
+	coder_routine(coder);
+	return (NULL);
 }
 
-void	release_single_dongle(t_coder *coder, t_dongle *dongle)
+void	start_simulation(t_workspace *workspace)
 {
-	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
-	if (dongle->current_user != coder->id)
-	{
-		safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
+	int	i;
+
+	if (workspace->config->total_compiles == 0)
 		return ;
-	}
-	dongle->last_dongle_usage = get_current_time();
-	dongle->in_use = false;
-	dongle->current_user = -1;
-	pthread_cond_broadcast(&dongle->cond);
-	safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
+	i = -1;
+	while (++i < workspace->config->number_coders)
+		safe_thread_handle(&workspace->coders[i].thread_id, codexion_simulator,
+			&workspace->coders[i], CREATE);
+	safe_thread_handle(&workspace->monitor_thread, (void *(*)(void *))monitor,
+		workspace, CREATE);
+	workspace->start_simulation = get_current_time();
+	set_bool(&workspace->stop_lock, &workspace->all_threads_ready, true);
+	i = -1;
+	while (++i < workspace->config->number_coders)
+		safe_thread_handle(&workspace->coders[i].thread_id, NULL, NULL, JOIN);
+	safe_thread_handle(&workspace->monitor_thread, NULL, NULL, JOIN);
 }
 
-void	release_dongles(t_coder *coder)
+void	wait_cooldown(t_coder *coder)
 {
-	t_dongle	*first;
-	t_dongle	*second;
+	long	cool_time;
+	long	last_used;
+	long	right_used;
+	long	time_elapsed;
 
-	assign_dongles(coder, &first, &second);
-	release_single_dongle(coder, first);
-	release_single_dongle(coder, second);
+	cool_time = coder->workspace->config->dongle_cooldown;
+	if (cool_time <= 0)
+		return ;
+	last_used = coder->left_dongle->last_dongle_usage;
+	right_used = get_long(&coder->right_dongle->mutex,
+			&coder->right_dongle->last_dongle_usage);
+	if (right_used > last_used)
+		last_used = right_used;
+	time_elapsed = get_current_time() - last_used;
+	if (time_elapsed < cool_time)
+		ft_usleep(cool_time - time_elapsed, coder->workspace);
 }

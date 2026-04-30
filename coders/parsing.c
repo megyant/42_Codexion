@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 15:38:57 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/23 19:19:46 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/04/30 09:29:31 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,6 @@ t_args	*input_error(int ac)
 
 int	check_input(char *arg)
 {
-	char	*str;
-
-	str = arg;
 	if (*arg == '\0' || *arg == '-')
 		return (0);
 	while (*arg != '\0')
@@ -66,57 +63,4 @@ int	check_input(char *arg)
 		arg++;
 	}
 	return (1);
-}
-
-t_args	*init_args(char **av)
-{
-	t_args	*config;
-
-	config = malloc(sizeof(t_args));
-	if (!config)
-		return (NULL);
-	config->number_coders = ft_atoi(av[1]);
-	config->time_burnout = ft_atol(av[2]);
-	config->time_compile = ft_atol(av[3]);
-	config->time_debug = ft_atol(av[4]);
-	config->time_refactor = ft_atol(av[5]);
-	config->total_compiles = ft_atoi(av[6]);
-	config->dongle_cooldown = ft_atol(av[7]);
-	if (strcmp(av[8], "fifo") == 0)
-		config->scheduler = 0;
-	else
-		config->scheduler = 1;
-	config = check_final_args(config);
-	if (!config)
-		return (ft_free(config));
-	return (config);
-}
-
-t_args	*check_final_args(t_args *config)
-{
-	if (!config)
-		return (NULL);
-	if (config->time_compile < 0 || config->time_debug < 0
-		|| config->time_refactor < 0 || config->total_compiles < 0
-		|| config->dongle_cooldown < 0 || (config->scheduler != 1
-			&& config->scheduler != 0) || config->number_coders < 1)
-	{
-		fprintf(stderr, "Error: Arguments must be positive integers.\n");
-		return (ft_free(config));
-	}
-	if (config->number_coders < 2)
-		fprintf(stderr, "Warning: Simulation is doomed whith 1 coder\n");
-	if (config->time_compile > config->time_burnout)
-	{
-		fprintf(stderr,
-			"Error: time_to_burnout is too short for a single compile.\n");
-		return (ft_free(config));
-	}
-	if (config->time_burnout < 10)
-		fprintf(stderr,
-			"Warning: Precision might be lost with burnout times < 10ms.\n");
-	if (config->time_burnout <= (config->time_compile + config->time_debug
-			+ config->time_refactor))
-		fprintf(stderr, "Warning: Burnout time too short to compile\n");
-	return (config);
 }

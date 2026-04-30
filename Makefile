@@ -6,7 +6,7 @@
 #    By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/25 15:50:00 by mbotelho          #+#    #+#              #
-#    Updated: 2026/04/27 11:49:40 by mbotelho         ###   ########.fr        #
+#    Updated: 2026/04/30 09:33:31 by mbotelho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,19 +16,20 @@ FLAGS = -Wall -Werror -Wextra -g
 
 FOLDER = coders
 
-SRCS = $(FOLDER)/codexion.c \
+SRCS = $(FOLDER)/main.c \
 	   $(FOLDER)/parsing.c \
 	   $(FOLDER)/utils.c \
-	   $(FOLDER)/utils2.c \
 	   $(FOLDER)/init.c \
-	   $(FOLDER)/memory_free.c \
-	   $(FOLDER)/simulation.c \
-	   $(FOLDER)/handle_mutex_thread.c \
-	   $(FOLDER)/gettime.c \
+	   $(FOLDER)/free.c \
+	   $(FOLDER)/coder.c \
+	   $(FOLDER)/mutex_thread_safe.c \
+	   $(FOLDER)/time.c \
 	   $(FOLDER)/monitor.c \
 	   $(FOLDER)/get_set.c \
-	   $(FOLDER)/new_sim.c \
-	   $(FOLDER)/synchro_utils.c
+	   $(FOLDER)/simulation.c \
+	   $(FOLDER)/sim_utils.c \
+	   $(FOLDER)/dongles.c \
+	   $(FOLDER)/heap.c
 
 OBJS = $(SRCS:.c=.o)
 
