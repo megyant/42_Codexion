@@ -60,8 +60,8 @@ void	wait_cooldown(t_coder *coder)
 	cool_time = coder->workspace->config->dongle_cooldown;
 	if (cool_time <= 0)
 		return ;
-	last_used = get_long(&coder->left_dongle->mutex, 
-                         &coder->left_dongle->last_dongle_usage);
+	last_used = get_long(&coder->left_dongle->mutex,
+			&coder->left_dongle->last_dongle_usage);
 	right_used = get_long(&coder->right_dongle->mutex,
 			&coder->right_dongle->last_dongle_usage);
 	if (right_used > last_used)

@@ -26,3 +26,20 @@ void	wait_threads(t_workspace *workspace)
 	while (!get_bool(&workspace->stop_lock, &workspace->all_threads_ready))
 		usleep(100);
 }
+
+t_args	*extra_errors(t_args *config)
+{
+	if (config->time_compile > config->time_burnout)
+	{
+		fprintf(stderr,
+			"Error: time_to_burnout is too short for a single compile.\n");
+		return (ft_free(config));
+	}
+	if (config->number_coders > 200)
+	{
+		fprintf(stderr,
+			"Error: Number of coders cannot exceed 200.\n");
+		return (ft_free(config));
+	}
+	return (config);
+}

@@ -109,6 +109,7 @@ int							init_coders(t_workspace *workspace);
 // sim_utils.c
 void						print_message(char *message, t_coder *coder);
 void						wait_threads(t_workspace *workspace);
+t_args						*extra_errors(t_args *config);
 
 // coder.c
 void						*coder_routine(t_coder *coder);

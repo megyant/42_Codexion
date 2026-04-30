@@ -73,14 +73,11 @@ t_args	*check_final_args(t_args *config)
 		fprintf(stderr, "Error: Arguments must be positive integers.\n");
 		return (ft_free(config));
 	}
+	config = extra_errors(config);
+	if (!config)
+		return (ft_free(config));
 	if (config->number_coders < 2)
 		fprintf(stderr, "Warning: Simulation is doomed with 1 coder\n");
-	if (config->time_compile > config->time_burnout)
-	{
-		fprintf(stderr,
-			"Error: time_to_burnout is too short for a single compile.\n");
-		return (ft_free(config));
-	}
 	if (config->time_burnout < 10)
 		fprintf(stderr,
 			"Warning: Precision might be lost with burnout times < 10ms.\n");
