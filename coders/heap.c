@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 09:11:00 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/30 09:16:35 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/05/01 15:26:06 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	prioritary_queue(t_request new, t_request old)
 		return (1);
 	if (new.priority_value > old.priority_value)
 		return (0);
-	return (new.ticket < old.ticket);
+	return (new.coder_id < old.coder_id); // <-- changed from ticket to id, needs testing at school, if works remove ticket completely
+	// More deterministic and not dependent on threads and time functions at all
 }
 
 t_request	heap_peek(t_request *heap, int size)
