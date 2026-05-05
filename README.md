@@ -69,3 +69,17 @@ Run the executable with the following positional arguments:
    - [Concurrent programming, with examples](https://begriffs.com/posts/2020-03-23-concurrent-programming.html)  
    - [Deadlock - CS431](https://cs341.cs.illinois.edu/coursebook/Deadlock#resource-allocation-graphs)
    - [Threads, Mutexes and Concurrent Programming in C](https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/)
+
+### Use of Artificial Intelligence
+Gemini was used to optimize the development workflow of this project. Some usages included:
+- Assist with testing the program
+- Logical improvement of functions
+- Improve understanding of some concepts
+- Quick and small debug checks througout the making of this program
+- Improve this README wording
+
+All algorithm and implementation of the logic in this program are the author's own work.
+
+## IMPORTANT MESSAGE
+
+DO NOT COPY OR CHEAT, YOU WILL NOT BE HELPING YOURSELF.
