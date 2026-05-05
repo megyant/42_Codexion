@@ -33,10 +33,12 @@ Such scenarios are a primary challenge in multithreaded systems with constrained
 
 ### How blocking cases have been handled
  
- **Deadlock Prevention**  
-Deadlocks were prevented by enforcing strict resource management and synchronization protocols. Beyond using mutexes to prevent data races (simultaneous access to coder data), the project ensures progress by managing how threads acquire multiple resources. For instance, mutexes protect coder-specific metadata, ensuring the monitor and coder threads never enter an inconsistent state or a circular wait when checking status variables like ```finished_compiling```.
+**Deadlock Prevention**  
+Deadlocks were prevented by enforcing strict resource management and synchronization protocols. Beyond using mutexes to prevent data races (simultaneous access to coder data), the project ensures progress by managing how threads acquire multiple resources.  
 
- **Burnout Prevention**  
+For instance, mutexes protect coder-specific metadata, ensuring the monitor and coder threads never enter an inconsistent state or a circular wait when checking status variables like ```finished_compiling```.
+
+**Burnout Prevention**  
 To prevent burnout, the system uses a queue and a heap to manage priorities, ensuring that the coders closest to their deadline get resources first.
 
 Precision was further improved by replacing the standard ```usleep()``` function with a custom version, ```ft_usleep()```. Standard ```usleep()``` can be inaccurate, often sleeping longer than requested
@@ -57,7 +59,7 @@ int	ft_usleep(long miliseconds, t_workspace *workspace)
 }
 ```
 
- **Burnout Detection**  
+**Burnout Detection**  
 A dedicated monitor thread was implemented to observe coder states asynchronously. It detects burnout in real-time by comparing the current timestamp against a coder's last compile start, ensuring the simulation terminates immediately upon a failure condition.
 
 ```
@@ -81,7 +83,7 @@ void	*monitor(t_workspace *workspace)
 }
 ```
 
- **Log serialization**  
+**Log serialization**  
 To prevent "interleaved" or corrupted console output, a print mutex was implemented. This ensures that log messages from different threads are printed atomically, maintaining a readable and chronological history of the simulation.
 
 ### Thread sincronization mechanisms
@@ -91,10 +93,10 @@ Mutexes are the primary mechanism used to provide mutual exclusion, protecting c
 **Dongles**  
 Each dongle is protected by its own ```pthread_mutex_t mutex``` mutex. When a coder attempts to acquire a dongle that is currently locked, they transition into a waiting state using a Condition Variable (```pthread_cond_t cond```). This prevents "busy-waiting" (wasting CPU cycles). Once a dongle is released, a ```pthread_cond_broadcast```
 
-**Coder**
+**Coder**  
 Each coder structure contains a ```pthread_mutex_t state_lock``` mutex. This facilitates safe communication between the coder thread (updating its own progress) and the monitor thread (reading that progress), ensuring data consistency.
 
-**Workspace (Global)**
+**Workspace (Global)**  
 The global workspace manages two specialized mutexes:
 - ```pthread_mutex_t stop_lock```: Protects the simulation’s "running" status to ensure all threads terminate simultaneously.
 - ```pthread_mutex_t print_lock```: Ensures serialized access to the standard output for clean logging.
