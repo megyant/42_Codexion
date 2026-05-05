@@ -9,7 +9,7 @@ A multi-threaded simulation exploring POSIX concurrency and resource management.
 
 The Codexion problem is a specialized adaptation of the Dining Philosophers problem. Both serve as classic models for illustrating concurrent algorithm design and complex synchronization challenges.
 
-In this simulation, five coders are positioned around a circular hub. There are several critical constraints:
+In this simulation, five coders are positioned around a circular hub (workspace). There are several critical constraints:
 
 - **Resource Scarcity:** There are only five dongles available in total. To perform a compile task, a coder must successfully acquire two dongles (typically the one to their left and the one to their right).
 
@@ -34,22 +34,70 @@ Such scenarios are a primary challenge in multithreaded systems with constrained
 ### How blocking cases have been handled
  
  **Deadlock Prevention**  
-mutexes
+Deadlocks were prevented by enforcing strict resource management and synchronization protocols. Beyond using mutexes to prevent data races (simultaneous access to coder data), the project ensures progress by managing how threads acquire multiple resources. For instance, mutexes protect coder-specific metadata, ensuring the monitor and coder threads never enter an inconsistent state or a circular wait when checking status variables like ```finished_compiling```.
 
- **Starvation Prevention**  
-queue management
+ **Burnout Prevention**  
+To prevent burnout, the system uses a queue and a heap to manage priorities, ensuring that the coders closest to their deadline get resources first.
+
+Precision was further improved by replacing the standard ```usleep()``` function with a custom version, ```ft_usleep()```. Standard ```usleep()``` can be inaccurate, often sleeping longer than requested
+
+```
+int	ft_usleep(long miliseconds, t_workspace *workspace)
+{
+	long	start;
+
+	start = get_current_time();
+	while ((get_current_time() - start) < miliseconds)
+	{
+		if (simulation_finished(workspace))
+			break ;
+		usleep(500);
+	}
+	return (0);
+}
+```
 
  **Burnout Detection**  
- monitor
+A dedicated monitor thread was implemented to observe coder states asynchronously. It detects burnout in real-time by comparing the current timestamp against a coder's last compile start, ensuring the simulation terminates immediately upon a failure condition.
+
+```
+void	*monitor(t_workspace *workspace)
+{
+	wait_threads(workspace);
+	while (!simulation_finished(workspace))
+	{
+		if (burnout(workspace))
+			return (NULL);
+		if (coders_finished(workspace))
+		{
+			safe_mutex_handle(&workspace->print_lock, LOCK, workspace);
+			printf("All finished!\n");
+			safe_mutex_handle(&workspace->print_lock, UNLOCK, workspace);
+			return (stop_simulation(workspace), NULL);
+		}
+		ft_usleep(1, workspace);
+	}
+	return (NULL);
+}
+```
 
  **Log serialization**  
-print mutex
+To prevent "interleaved" or corrupted console output, a print mutex was implemented. This ensures that log messages from different threads are printed atomically, maintaining a readable and chronological history of the simulation.
 
 ### Thread sincronization mechanisms
 
-**Wait thread creation**
+Mutexes are the primary mechanism used to provide mutual exclusion, protecting critical sections of code from concurrent access and preventing race conditions.
 
-**Mutexes**
+**Dongles**  
+Each dongle is protected by its own ```pthread_mutex_t mutex``` mutex. When a coder attempts to acquire a dongle that is currently locked, they transition into a waiting state using a Condition Variable (```pthread_cond_t cond```). This prevents "busy-waiting" (wasting CPU cycles). Once a dongle is released, a ```pthread_cond_broadcast```
+
+**Coder**
+Each coder structure contains a ```pthread_mutex_t state_lock``` mutex. This facilitates safe communication between the coder thread (updating its own progress) and the monitor thread (reading that progress), ensuring data consistency.
+
+**Workspace (Global)**
+The global workspace manages two specialized mutexes:
+- ```pthread_mutex_t stop_lock```: Protects the simulation’s "running" status to ensure all threads terminate simultaneously.
+- ```pthread_mutex_t print_lock```: Ensures serialized access to the standard output for clean logging.
 
 ## Instructions
 
