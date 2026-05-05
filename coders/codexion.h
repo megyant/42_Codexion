@@ -52,7 +52,6 @@ typedef struct s_request
 {
 	int						coder_id;
 	long					priority_value;
-	long					ticket;
 }							t_request;
 
 typedef struct s_dongle
@@ -129,8 +128,7 @@ void						release_single_dongle(t_coder *coder,
 void						release_dongles(t_coder *coder);
 
 // heap.c
-t_request					queue_management(t_coder *coder, t_dongle *dongle,
-								long last_compile);
+t_request					queue_management(t_coder *coder, long last_compile);
 void						heap_push(t_dongle *dongle, t_request request);
 int							prioritary_queue(t_request new, t_request old);
 t_request					heap_peek(t_request *heap, int size);

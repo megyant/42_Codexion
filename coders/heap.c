@@ -12,13 +12,11 @@
 
 #include "codexion.h"
 
-t_request	queue_management(t_coder *coder, t_dongle *dongle,
-		long last_compile)
+t_request	queue_management(t_coder *coder, long last_compile)
 {
 	t_request	request;
 
 	request.coder_id = coder->id;
-	request.ticket = dongle->seq_counter++;
 	if (coder->workspace->config->scheduler == 1)
 		request.priority_value = last_compile
 			+ coder->workspace->config->time_burnout;
@@ -52,8 +50,7 @@ int	prioritary_queue(t_request new, t_request old)
 		return (1);
 	if (new.priority_value > old.priority_value)
 		return (0);
-	return (new.coder_id < old.coder_id); // <-- changed from ticket to id, needs testing at school, if works remove ticket completely
-	// More deterministic and not dependent on threads and time functions at all
+	return (new.coder_id < old.coder_id);
 }
 
 t_request	heap_peek(t_request *heap, int size)
@@ -64,7 +61,6 @@ t_request	heap_peek(t_request *heap, int size)
 	{
 		empty.coder_id = -1;
 		empty.priority_value = 0;
-		empty.ticket = 0;
 		return (empty);
 	}
 	return (heap[0]);
