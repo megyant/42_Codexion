@@ -7,14 +7,49 @@ A multi-threaded simulation exploring POSIX concurrency and resource management.
 
 ### The codexion problem
 
-### Threads
+The Codexion problem is a specialized adaptation of the Dining Philosophers problem. Both serve as classic models for illustrating concurrent algorithm design and complex synchronization challenges.
 
+In this simulation, five coders are positioned around a circular hub. There are several critical constraints:
+
+- **Resource Scarcity:** There are only five dongles available in total. To perform a compile task, a coder must successfully acquire two dongles (typically the one to their left and the one to their right).
+
+- **The Workflow:** Each coder must follow a strict, sequential routine: Compiling → Debugging → Refactoring.
+
+- **Resource Availability:** Dongles are released and become available to neighbors only when a coder transitions into the debugging or refactoring phases.
+
+- **The Burnout Mechanic:** Time is a finite resource. If a coder remains idle or stuck in a waiting state for too long without starting a compile, they "burn out," resulting in an immediate simulation failure.
+
+The objective of this project is to implement a management system that orchestrates these threads efficiently, ensuring every coder completes their required cycles while avoiding deadlocks and preventing burnout.
+
+### Threads
+A thread is a component of a process, the smallest sequence of instructions that can be independently managed by a scheduler. Multiple threads can be executed at the same time, threads of the same process share its code and values of allocated variables. All threads share resources, such as memory.  
+  
+This architecture enables high-efficiency multitasking. While a single-core CPU achieves concurrency through rapid context switching (interleaving instructions to simulate simultaneous execution), multi-core systems achieve true parallelism by distributing threads across physical hardware units. Modern processors further optimize this through Simultaneous Multithreading (SMT), allowing multiple execution threads to saturate a single physical core's pipeline, maximizing throughput in resource-heavy applications.
 
 ### Deadlocks
+Deadlock is a state in which a set of concurrent threads is permanently stalled because each thread is waiting for a resource held by another thread in the same set. This creates a circular chain of dependencies where no entity can progress.
+
+Such scenarios are a primary challenge in multithreaded systems with constrained resources, particularly in this simulation where coders must acquire multiple dongles simultaneously. This project addresses deadlock potential by systematically breaking the necessary conditions for their occurrence, as detailed below.
 
 ### How blocking cases have been handled
+ 
+ **Deadlock Prevention**  
+mutexes
+
+ **Starvation Prevention**  
+queue management
+
+ **Burnout Detection**  
+ monitor
+
+ **Log serialization**  
+print mutex
 
 ### Thread sincronization mechanisms
+
+**Wait thread creation**
+
+**Mutexes**
 
 ## Instructions
 
@@ -35,7 +70,7 @@ Run the executable with the following positional arguments:
 
 **Example**:
 ```
-./codexion 5 800 200 200 200 200 60 edf
+./codexion 5 800 200 200 200 2 60 edf
 ```
 
 ### Argument details
