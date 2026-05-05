@@ -6,7 +6,7 @@
 /*   By: mbotelho <mbotelho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 09:06:25 by mbotelho          #+#    #+#             */
-/*   Updated: 2026/04/30 09:32:59 by mbotelho         ###   ########.fr       */
+/*   Updated: 2026/05/05 09:04:54 by mbotelho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	request_dongle(t_coder *coder, t_dongle *dongle)
 
 	last_compile = get_long(&coder->state_lock, &coder->last_compile_time);
 	safe_mutex_handle(&dongle->mutex, LOCK, coder->workspace);
-	request = queue_management(coder, dongle, last_compile);
+	request = queue_management(coder, last_compile);
 	heap_push(dongle, request);
 	request_dongle_util(coder, dongle, request);
 	if (!simulation_finished(coder->workspace))
