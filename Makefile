@@ -14,7 +14,7 @@ NAME = codexion
 CC = cc
 FLAGS = -Wall -Werror -Wextra -g
 
-FOLDER = coders
+FOLDER = src
 
 SRCS = $(FOLDER)/main.c \
 	   $(FOLDER)/parsing.c \
