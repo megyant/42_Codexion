@@ -45,11 +45,11 @@ int	burnout(t_workspace *workspace)
 				&workspace->coders[i].last_compile_time);
 		if (now - last_compile > workspace->config->time_burnout)
 		{
+			stop_simulation(workspace);
 			safe_mutex_handle(&workspace->print_lock, LOCK, workspace);
 			printf("%ld %d burned out\n", (now - workspace->start_simulation),
 				workspace->coders[i].id);
 			safe_mutex_handle(&workspace->print_lock, UNLOCK, workspace);
-			stop_simulation(workspace);
 			return (1);
 		}
 	}

@@ -78,9 +78,11 @@ t_args	*check_final_args(t_args *config)
 		return (ft_free(config));
 	if (config->number_coders < 2)
 		fprintf(stderr, "Warning: Simulation is doomed with 1 coder\n");
-	if (config->time_burnout < 10)
-		fprintf(stderr,
-			"Warning: Precision might be lost with burnout times < 10ms.\n");
+	if (config->number_coders > 60)
+		{
+		fprintf(stderr, "Error: Too many coders for school computer to handle.\n");
+		return (ft_free(config));
+		}
 	if (config->time_burnout <= (config->time_compile + config->time_debug
 			+ config->time_refactor))
 		fprintf(stderr, "Warning: Burnout time too short to compile\n");
