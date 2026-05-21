@@ -42,8 +42,6 @@ t_args	*input_error(int ac)
 		fprintf(stderr, "Error: invalid input. Too many arguments\n");
 	else if (ac < 9)
 		fprintf(stderr, "Error: invalid input. Too few arguments\n");
-	else
-		fprintf(stderr, "Error: invalid input.\n");
 	fprintf(stderr,
 		"\nInput format: ./codexion number_of_coders time_to_burnout "
 		"time_to_compile time_to_debug "

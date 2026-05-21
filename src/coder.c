@@ -33,17 +33,16 @@ void	grab_dongles(t_coder *coder)
 	t_dongle	*first;
 	t_dongle	*second;
 
+	wait_cooldown(coder);
 	assign_dongles(coder, &first, &second);
 	request_dongle(coder, first);
 	print_message("has taken a dongle", coder);
 	request_dongle(coder, second);
 	print_message("has taken a dongle", coder);
-	wait_cooldown(coder);
 }
 
 void	compile(t_coder *coder)
 {
-	wait_cooldown(coder);
 	safe_mutex_handle(&coder->state_lock, LOCK, coder->workspace);
 	coder->last_compile_time = get_current_time();
 	coder->compile_count++;

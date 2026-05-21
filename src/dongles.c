@@ -75,7 +75,6 @@ void	release_single_dongle(t_coder *coder, t_dongle *dongle)
 	dongle->last_dongle_usage = get_current_time();
 	dongle->in_use = false;
 	dongle->current_user = -1;
-	pthread_cond_broadcast(&dongle->cond);
 	safe_mutex_handle(&dongle->mutex, UNLOCK, coder->workspace);
 }
 
