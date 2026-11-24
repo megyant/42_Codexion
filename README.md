@@ -1,6 +1,6 @@
-# Codexion
+*This project has been created as part of the 42 curriculum by mbotelho.*  
 
-*This project has been created as part of the 42 curriculum by <mbotelho>mbotelho.*  
+# Codexion
 
 ## Description
 A multi-threaded simulation exploring POSIX concurrency and resource management. In this project, coder threads compete for limited USB dongles to complete tasks before their burnout threshold (deadline) is reached.
